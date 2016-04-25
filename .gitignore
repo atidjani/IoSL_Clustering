@@ -33,3 +33,6 @@
 *.su
 
 .DS_Store
+
+# Build Directories
+build/
