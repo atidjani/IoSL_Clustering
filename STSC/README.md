@@ -8,5 +8,5 @@ Requires Eigen2 library and CMake
 
     $ mkdir build
     $ cd build
-    $ cmake ../
+    $ cmake ../lib/
     $ make
