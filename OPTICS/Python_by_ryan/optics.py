@@ -316,10 +316,10 @@ points = [
 ]
 
 if __name__ == '__main__':
-  if len(sys.argv)!=2:
+  if len(sys.argv)!=3:
     print "     Incorrect input paramaters    "
     print "*********How to run the script*****"
-    print "python optics.py <input.txt>"
+    print "python optics.py <inputfile.txt> <outputfile.txt>"
     sys.exit(1)
 
 points_list = list()
@@ -334,10 +334,17 @@ with open(sys.argv[1], 'rb') as f:
         points_list.append(p_tuple)
 
 points = points_list
+
 optics = Optics(points, 100, 2) # 100m radius for neighbor consideration, cluster size >= 2 points
 optics.run()                    # run the algorithm
 clusters = optics.cluster(50)   # 50m threshold for clustering
 
+opfile = open(sys.argv[2],'wb')
+count = 0
 for cluster in clusters:
-    print cluster.points
+    # print cluster.points
+    for p in cluster.points:
+        value = str(p.latitude) + ' ' + str(p.longitude) + ' ' + str(count) + '\n'
+        opfile.write(value)
+    count += 1
 print "Number Of Cluster",len(clusters)

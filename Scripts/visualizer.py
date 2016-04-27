@@ -25,7 +25,7 @@ def main(inputFile):
     resMatrix = []
     for line in f:
         input = line.split(' ', 4);
-        resMatrix.append([int(input[0]), int(input[1]), int(input[2])])
+        resMatrix.append([float(input[0]), float(input[1]), float(input[2])])
 
     plot(resMatrix)
 
