@@ -27,6 +27,9 @@
 
 import math
 import json
+import string
+import sys
+import csv
 
 ################################################################################
 # POINT
@@ -312,9 +315,29 @@ points = [
     Point(37.776265, -122.424657), # cluster #2
 ]
 
+if __name__ == '__main__':
+  if len(sys.argv)!=2:
+    print "     Incorrect input paramaters    "
+    print "*********How to run the script*****"
+    print "python optics.py <input.txt>"
+    sys.exit(1)
+
+points_list = list()
+with open(sys.argv[1], 'rb') as f:
+    try:
+        file_reader = csv.reader(f, delimiter=',')
+    except IOError:
+        print "Error Reading csv File", file_reader
+        sys.exit()
+    for row in file_reader:
+        p_tuple = Point(float(row[0]),float(row[1]))
+        points_list.append(p_tuple)
+
+points = points_list
 optics = Optics(points, 100, 2) # 100m radius for neighbor consideration, cluster size >= 2 points
 optics.run()                    # run the algorithm
 clusters = optics.cluster(50)   # 50m threshold for clustering
 
 for cluster in clusters:
     print cluster.points
+print "Number Of Cluster",len(clusters)
