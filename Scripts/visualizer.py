@@ -24,8 +24,13 @@ def main(inputFile):
     # Read data into a matrix
     resMatrix = []
     for line in f:
+<<<<<<< HEAD
         input = line.split(' ', 4);
         resMatrix.append([float(input[0]), float(input[1]), float(input[2])])
+=======
+        input = line.split(',', 4);
+        resMatrix.append([int(input[0]), int(input[1]), int(input[2])])
+>>>>>>> edf80baa368f3734afba6eb591182c79292c0eb8
 
     plot(resMatrix)
 
