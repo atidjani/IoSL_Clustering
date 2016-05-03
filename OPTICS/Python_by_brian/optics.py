@@ -44,7 +44,6 @@ bhclowers at gmail.com
 import numpy as N
 import pylab as P
 import hcluster as H
-import sys, os, csv
 
 
 def optics(x, k, distMethod = 'euclidean'):
@@ -52,7 +51,7 @@ def optics(x, k, distMethod = 'euclidean'):
         m,n = x.shape
     else:
         m = x.shape[0]
-        n = 1  #  n == 1 original line
+        n == 1
 
     try:
         D = H.squareform(H.pdist(x, distMethod))
@@ -130,36 +129,15 @@ if __name__ == "__main__":
                     [ 43.,  97.],
                     [ 97.,   9.]])
 
-    if len(sys.argv)!=2:
-        print "     Incorrect input paramaters    "
-        print "*********How to run the script*****"
-        print "python optics.py <inputfile.txt>   "
-        sys.exit(1)
-
-    points_list = list()
-    with open(sys.argv[1], 'rb') as f:
-        try:
-            file_reader = csv.reader(f, delimiter=',')
-        except IOError:
-            print "Error Reading csv File", file_reader
-            sys.exit()
-        for row in file_reader:
-            p_tuple = [float(row[0]),float(row[1])]
-            points_list.append(p_tuple)
-
-    testX = N.array(points_list)
-    # print testX
-
 #    mlabOrder = N.array(1,2,6,7,3,8,9,4,5,10) #the order returned by the original MATLAB code
 # Remeber MATLAB counts from 1, python from 0
 
 
     P.plot(testX[:,0], testX[:,1], 'ro')
     RD, CD, order = optics(testX, 4)
-
     testXOrdered = testX[order]
     P.plot(testXOrdered[:,0], testXOrdered[:,1], 'b-')
+	
+    print order
 
-    print testXOrdered[:,1]
-
-    # P.show()
+    P.show()

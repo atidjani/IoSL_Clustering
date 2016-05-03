@@ -16,55 +16,27 @@ import matplotlib.pyplot as plt
 import OpticsClusterArea as OP
 from itertools import *
 import AutomaticClustering as AutoC
-import sys,os,csv
 
 # generate some spatial data with varying densities
-# np.random.seed(0)
+np.random.seed(0)
 
-# n_points_per_cluster = 250
-#
+n_points_per_cluster = 250
+
 X = np.empty((0, 2))
-# X = np.r_[X, [-5,-2] + .8 * np.random.randn(n_points_per_cluster, 2)]
-#
-# X = np.r_[X, [4,-1] + .1 * np.random.randn(n_points_per_cluster, 2)]
-#
-# X = np.r_[X, [1,-2] + .2 * np.random.randn(n_points_per_cluster, 2)]
-#
-# X = np.r_[X, [-2,3] + .3 * np.random.randn(n_points_per_cluster, 2)]
-#
-# X = np.r_[X, [3,-2] + 1.6 * np.random.randn(n_points_per_cluster, 2)]
-#
-# X = np.r_[X, [5,6] + 2 * np.random.randn(n_points_per_cluster, 2)]
-# aa=[-5,-2]
-# bb=np.random.randn(n_points_per_cluster, 1)
-# print bb
+X = np.r_[X, [-5,-2] + .8 * np.random.randn(n_points_per_cluster, 2)]
 
-############Input Parameters#########
-k = 9 # Min. number of neighboring points in cluster
-eps = 0.4 # max raduis of the neighborhood
-#####################################
+X = np.r_[X, [4,-1] + .1 * np.random.randn(n_points_per_cluster, 2)]
 
-if len(sys.argv)!=2:
-    print "     Incorrect input paramaters    "
-    print "*********How to run the script*****"
-    print "python optics.py <inputfile.txt>   "
-    sys.exit(1)
+X = np.r_[X, [1,-2] + .2 * np.random.randn(n_points_per_cluster, 2)]
 
-points_list = list()
-with open(sys.argv[1], 'rb') as f:
-    try:
-        file_reader = csv.reader(f, delimiter=',')
-    except IOError:
-        print "Error Reading csv File", file_reader
-        sys.exit()
-    for row in file_reader:
-        p_tuple = [float(row[0]),float(row[1])]
-        points_list.append(p_tuple)
+X = np.r_[X, [-2,3] + .3 * np.random.randn(n_points_per_cluster, 2)]
 
-X = np.array(points_list)
-# print X
+X = np.r_[X, [3,-2] + 1.6 * np.random.randn(n_points_per_cluster, 2)]
 
-## plot scatterplot of points
+X = np.r_[X, [5,6] + 2 * np.random.randn(n_points_per_cluster, 2)]
+
+
+#plot scatterplot of points
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
@@ -79,11 +51,11 @@ plt.show()
 
 
 #run the OPTICS algorithm on the points, using a smoothing value (0 = no smoothing)
-RD, CD, order = OP.optics(X,k)
+RD, CD, order = OP.optics(X,9)
 
 RPlot = []
 RPoints = []
-
+        
 for item in order:
     RPlot.append(RD[item]) #Reachability Plot
     RPoints.append([X[item][0],X[item][1]]) #points in their order determined by OPTICS
