@@ -337,12 +337,12 @@ points = points_list
 
 optics = Optics(points, 100, 2) # 100m radius for neighbor consideration, cluster size >= 2 points
 optics.run()                    # run the algorithm
-clusters = optics.cluster(50)   # 50m threshold for clustering
+clusters = optics.cluster(100)   # 50m threshold for clustering
 
 opfile = open(sys.argv[2],'wb')
 count = 0
 for cluster in clusters:
-    # print cluster.points
+    print cluster.points
     for p in cluster.points:
         value = str(p.latitude) + ' ' + str(p.longitude) + ' ' + str(count) + '\n'
         opfile.write(value)
