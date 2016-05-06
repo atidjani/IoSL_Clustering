@@ -25,7 +25,6 @@ function [ SetOfClusters, RD, CD, order ] = cluster_optics(points, minpts, epsil
 % This function requires optics.m from Michal Daszykowski's implementation of calculating the reachability distance for all points.
 % For more details, refer to
 % http://chemometria.us.edu.pl/index.php?goto=downloads
-
 disp('Calculating reachability for all points.');
 tic;
 [RD,CD,order]=optics(points,minpts);
@@ -154,14 +153,14 @@ while i < size(points,1)-1
                     elseif RD(order(SetOfSteepDownAreas(k).start))*(1-epsilon) > RD(order(i))
                         % condition b
                         tmp = abs(RD(SetOfSteepDownAreas(k).start:SetOfSteepDownAreas(k).end)-RD(order(i)));
-                        [aa, clusterStart] = min(tmp) %index of closest value
+                        [~, clusterStart] = min(tmp); %index of closest value
                         clusterStart = clusterStart+SetOfSteepDownAreas(k).start-1;
                         clusterEnd = i;
                     elseif RD(order(SetOfSteepDownAreas(k).start)) < RD(order(i))*(1-epsilon)
                         % condition c
                         clusterStart = SetOfSteepDownAreas(k).start;
                         tmp = abs(RD(upAreaStart:i)-RD(order(SetOfSteepDownAreas(k).start)));
-                        [bb, clusterEnd] = min(tmp); %index of closest value
+                        [~, clusterEnd] = min(tmp); %index of closest value
                         clusterEnd = clusterEnd+upAreaStart;
                     else
                         error('ERROR\n');
