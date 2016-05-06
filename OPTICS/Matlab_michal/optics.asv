@@ -33,7 +33,7 @@
 % The University of Silesia
 % December 2004
 % http://www.chemometria.us.edu.pl
-
+x=[randn(30,2)*.4;randn(40,2)*.5+ones(40,1)*[4 4]];
 function [RD,CD,order]=optics(x,k)
 
 [m,n]=size(x);
@@ -84,3 +84,4 @@ if n==1
    D=abs((ones(m,1)*i-x))';
 end
 
+[RD,CD,order]=optics(x,4)
