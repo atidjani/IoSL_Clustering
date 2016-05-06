@@ -12,14 +12,14 @@
 %points=[randn(30,2)*.4;randn(40,2)*.5+ones(40,1)*[4 4]];
 
 format long
-filename = '..\..\Datasets\2.txt';
+filename = '..\..\Datasets\1.txt';
 delimiterIn = ',';
 headerlinesIn = 0;
 points = importdata(filename,delimiterIn,headerlinesIn);
 size(points);
 
-minpts=5;
-epsilon=0.3;
+minpts=4;
+epsilon=0.4;
 [ SetOfClusters, RD, CD, order ] = cluster_optics(points, minpts, epsilon);
 
 %bar(RD(order));
@@ -29,22 +29,30 @@ class = (-1).^rand(2,10,1);
 % Cycle through all clusters
 for i=2:length(SetOfClusters)
 %    bar(RD(order(SetOfClusters(i).start:SetOfClusters(i).end)));
+    hold on
     if i==2
-        plot(RD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'b.');
+        %subplot(2,2,1)
+        plot(CD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'b.');
     elseif i==3
-        plot(RD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'r.');
+        %subplot(2,2,2)
+        plot(CD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'r.');
     elseif i==4
-        plot(RD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'m.');
+        %subplot(2,2,3)
+        plot(CD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'m.');
     elseif i==5
-        plot(RD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'g.');
+        %subplot(2,2,4)
+        plot(CD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'g.');
     elseif i==6
-        plot(RD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'y.');
-    else
-        plot(RD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'y.');
+        %subplot(2,2,4)
+        plot(CD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'y.');
+    elseif i==7
+        %subplot(2,2,4)
+        plot(CD(order(SetOfClusters(i).start:SetOfClusters(i).end)),'y.');
     end
-    xlabel('x'), ylabel('y'), title('Clusters Plot');%legend('Cluster');    
-    hold on;
-    pause(0.4);
+    
+    xlabel('x'), ylabel('y'), title('Clusters Plot'),legend('Cluster')    
+    hold on
+    pause(0.2)
 end
 hold off;
 
