@@ -1,51 +1,139 @@
+#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <iterator>
 #include <cmath>
+#include <fstream>
+#include <map>
 #include <Eigen/Core>
 #include "SpectralClustering.h"
 
-int main() {
-    std::vector<int> items = {1,2,3,4,5,6,7,8,9,10};
+/*
+ * Read the input data. The format of the dataset must be
+ * feature_1,....,feature_n
+ * feature_1,....,feature_n
+ *
+ * @filePath: the path of the dataset
+ *
+ * @ret a vector of multi dimensional points
+ */
+
+std::vector<std::vector<double> > readData(char* filePath) {
+    std::fstream aInput;
+    aInput.open(filePath, std::fstream::in);
+
+    std::vector<std::vector<double> > aDataVect;
+    std::string aLine;
+    while(std::getline(aInput, aLine)) {
+        std::vector<double> aPoint;
+        int nStart = 0, nEnd = 0;
+        while ((nEnd = aLine.find(',', nStart)) != std::string::npos) {
+            aPoint.push_back(std::stod(aLine.substr(nStart, nEnd - nStart)));
+            nStart = nEnd + 1;
+        }
+        aPoint.push_back(std::stod(aLine.substr(nStart, aLine.length() - nStart)));
+        aDataVect.push_back(aPoint);
+    }
+    aInput.close();
+    return aDataVect;
+}
+
+/*
+ * calculate the Euclidean Distance between two points
+ *
+ * @rD1: First point
+ * @rD2: Second point
+ *
+ * @ret the Euclidean Distance
+ */
+
+double euclideanDistance(std::vector<double>& rD1, std::vector<double>& rD2) {
+    double dRes=0;
+    for (int i=0; i<rD1.size(); i++) {
+        double dDiff = rD1[i] - rD2[i];
+        dRes += dDiff * dDiff;
+    }
+    return std::sqrt(dRes);
+}
+
+/*
+ * Compute the sigma parameter. The sigma is the tuning parameter and
+ * it is defined as the distance between the point and its seventh
+ * nearest neighboor
+ *
+ * @rDataset: the whole dataset
+ * @nPIndex: the index of the point to analyze
+ *
+ * @ret the distance of nPIndex's 7th neighboor.
+ */
+
+double sigma(std::vector<std::vector<double>> rDataset, int nPIndex) {
+    std::vector<double> aDistances;
+    for (int i=0; i<rDataset.size(); i++) {
+        if (i != nPIndex) { //Don't compare the point with itself
+            aDistances.push_back(euclideanDistance(rDataset[nPIndex], rDataset[i]));
+        }
+    }
+
+    std::sort(aDistances.begin(), aDistances.end());
+
+    return aDistances[6];
+}
+
+int main(int argc, char* argv[]) {
+
+    if (argc != 3) {
+        std::cout << "Usage: ./runner [Dataset] [# Exp. Clusters]" << std::endl;
+        return -1;
+    }
+
+    std::vector<std::vector<double> > aInput = readData(argv[1]);
 
     // generate similarity matrix
-    unsigned int size = items.size();
+    unsigned int size = aInput.size();
     Eigen::MatrixXd m = Eigen::MatrixXd::Zero(size,size);
 
+    // calculate sigmas
+    std::vector<double> aSigmas;
+    for (int i=0; i<size; i++) {
+        aSigmas.push_back(sigma(aInput, i));
+    }
+
     for (unsigned int i=0; i < size; i++) {
-        for (unsigned int j=0; j < size; j++) {
+        for (unsigned int j=i+1; j < size; j++) {
             // generate similarity
-            int d = items[i] - items[j];
-            int similarity = exp(-d*d / 100);
+            double d = euclideanDistance(aInput[i], aInput[j]);
+            double similarity = exp(-(d*d) / (aSigmas[i] * aSigmas[j]));
             m(i,j) = similarity;
             m(j,i) = similarity;
         }
     }
 
     // the number of eigenvectors to consider. This should be near (but greater) than the number of clusters you expect. Fewer dimensions will speed up the clustering
-    int numDims = size;
+    int numDims = std::stoi(argv[2]);
 
     // do eigenvalue decomposition
-    SpectralClustering* c = new SpectralClustering(m, numDims);
-
-    // whether to use auto-tuning spectral clustering or kmeans spectral clustering
-    bool autotune = true;
+    SpectralClustering c(m, numDims);
 
     std::vector<std::vector<int> > clusters;
-    if (autotune) {
-        // auto-tuning clustering
-        clusters = c->clusterRotate();
-    } else {
-        // how many clusters you want
-        int numClusters = 5;
-        clusters = c->clusterKmeans(numClusters);
-    }
+    // auto-tuning clustering
+    clusters = c.clusterRotate();
 
     // output clustered items
     // items are ordered according to distance from cluster centre
+
+    std::fstream aResult;
+    aResult.open("output", std::fstream::out);
+
     for (unsigned int i=0; i < clusters.size(); i++) {
-        std::cout << "Cluster " << i << ": " << "Item ";
-        std::copy(clusters[i].begin(), clusters[i].end(), std::ostream_iterator<int>(std::cout, ", "));
-        std::cout << std::endl;
+        for (int j = 0; j < clusters[i].size(); j++) {
+           for (int k=0; k<aInput[clusters[i][j]].size(); k++) {
+               aResult << aInput[clusters[i][j]][k] << ",";
+           }
+           aResult << i << std::endl;
+        }
     }
+
+    aResult.close();
+    return 0;
 }

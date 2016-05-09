@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6) 
+cmake_minimum_required (VERSION 2.6)
 project (clustering)
 
 IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
@@ -11,6 +11,7 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
+set (CMAKE_CXX_FLAGS "-g")
 
 find_package(Eigen2 REQUIRED)
 include_directories(${Eigen2_INCLUDE_DIR})

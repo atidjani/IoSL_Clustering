@@ -125,7 +125,6 @@ void Evrot::evrot() {
 void Evrot::cluster_assign() {
 	// find max of each row
 	Eigen::VectorXi max_index_col(mNumData);
-	int i,j;
 	for (int i=0; i<mNumData; i++ ) {
 		int row, col;
 		mXrot.row(i).cwise().abs().maxCoeff(&row, &col);
@@ -133,8 +132,8 @@ void Evrot::cluster_assign() {
 	}
 
 	// prepare cluster assignments
-	for( j=0; j<mNumDims; j++ ){  // loop over all columns
-		for( i=0; i<mNumData; i++ ){ // loop over all rows
+	for(int j=0; j<mNumDims; j++ ){  // loop over all columns
+		for(int i=0; i<mNumData; i++ ){ // loop over all rows
 			if( max_index_col[i] == j ){
 				mClusters[j].push_back(i);
 			}
