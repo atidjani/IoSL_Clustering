@@ -17,5 +17,5 @@ endif(NOT CMAKE_BUILD_TYPE)
 link_directories(${CMAKE_SOURCE_DIR}/../build/lib/)
 
 add_executable(runner runner.cpp)
-add_definitions(-std=c++11)
-target_link_libraries(example clustering)
+add_definitions(-g -std=c++11)
+target_link_libraries(runner clustering)
