@@ -23,7 +23,7 @@ def main(inputFile):
 
     # Read data into a matrix
     resMatrix = []
-    for line in f:
+    for line in f.readlines():
         input = line.split(',', 4);
         resMatrix.append([float(input[0]), float(input[1]), float(input[2])])
 
