@@ -129,18 +129,15 @@ int main(int argc, char* argv[]) {
     // output clustered items
     // items are ordered according to distance from cluster centre
 
-    std::fstream aResult;
-    aResult.open("output", std::fstream::out);
 
     for (unsigned int i=0; i < clusters.size(); i++) {
         for (int j = 0; j < clusters[i].size(); j++) {
            for (int k=0; k<aInput[clusters[i][j]].size(); k++) {
-               aResult << aInput[clusters[i][j]][k] << ",";
+               std::cout << aInput[clusters[i][j]][k] << ",";
            }
-           aResult << i << std::endl;
+           std::cout << i << std::endl;
         }
     }
 
-    aResult.close();
     return 0;
 }
