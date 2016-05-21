@@ -20,6 +20,16 @@ class StscRunner :
     def run(self) :
         args = [self.__exePath, self.__filePath, str(self.__maxClusters), str(self.__K)]
         proc = s.Popen(args, stdout = s.PIPE)
-        return proc.stdout.read().decode('utf-8')
+        tmp = proc.stdout.read().decode('utf-8').split('\n')
 
+        resArray = []
+        for element in tmp[:-1]:
+            element = element.split(',')
+            eList = list(map(float,element[:-1]))
+            eList.append(int(element[-1]))
+            resArray.append(eList)
+
+        numClusters = max(i[2] for i in resArray) + 1
+
+        return {'numClusters': numClusters, 'result': resArray }
 
