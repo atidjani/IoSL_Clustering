@@ -73,7 +73,7 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, int minPts, 
     }else{
       while(!startPts.empty()){
         //currCluster := set of objects from startPts.top() to o;
-        if((reachdist[startPts.top()] > reachdist[o]) && (currCluster.size() >= MinPts)){
+        if((reachdist[startPts.top()] > reachdist[o]) && (currentCluster.size() >= minPts)){
           //setOfClusters.add(currCluster);
         }
         startPts.pop();
