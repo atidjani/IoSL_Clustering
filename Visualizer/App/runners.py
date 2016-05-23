@@ -10,7 +10,7 @@ class StscRunner :
     __K = 6
     __maxClusters = 0
     # The absolute path is totally BS. I'll change it. Have faith
-    __exePath = "/home/fabio/First/IoSL/STSC/cpp/runner/build/runner"
+    __exePath = "../../STSC/cpp/runner/build/runner"
 
     def __init__ (self, filePath, maxClusters, K = 6) :
         self.__filePath = filePath
