@@ -1,0 +1,48 @@
+<head>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    svg {
+      border: 2px solid #808080;
+      border-radius: 10px;
+    }
+  </style>
+
+</head>
+<body>
+  <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+  <script>
+
+  var height = 500;
+  var width = 500;
+  var result = {{ result }};
+
+  // Generate random colors
+  var numClusters = {{ numClusters }};
+  var colors = []
+  for (i=0; i<numClusters; i++) {
+    colors.push('#' + (Math.random().toString(16) + "000000").substring(2,8))
+  }
+
+
+  var svg = d3.select("body")
+                      .append("svg")
+                      .attr("width", width)
+                      .attr("height", height);
+
+  svg.selectAll("circle")
+    .data(result)
+    .enter()
+    .append("circle")
+    .attr("cx", function(d) { return d[0] * width; })
+    .attr("cy", function(d) { return d[1] * height; })
+    .attr("r", 2)
+    .attr("fill", function(d) { return colors[d[2]]; });
+
+
+
+  </script>
+</body>

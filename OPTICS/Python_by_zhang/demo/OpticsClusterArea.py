@@ -91,7 +91,7 @@ def optics(x, k, distMethod = 'euclidean'):
         tempX = N.ones(len(seeds))*CD[ob]
         tempD = D[ob][seeds]#[seeds]
         #you can use this function if you don't want to use hcluster
-        #tempD = euclid(x[ob],x[seeds])
+        # tempD = euclid(x[ob],x[seeds])
 
         temp = N.column_stack((tempX, tempD))
         mm = N.max(temp, axis = 1)

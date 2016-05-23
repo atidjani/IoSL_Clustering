@@ -67,7 +67,7 @@ double euclideanDistance(std::vector<double>& rD1, std::vector<double>& rD2) {
  * @ret the distance of nPIndex's 7th neighboor.
  */
 
-double sigma(std::vector<std::vector<double>> rDataset, int nPIndex) {
+double sigma(std::vector<std::vector<double>> rDataset, int nPIndex, int K) {
     std::vector<double> aDistances;
     for (int i=0; i<rDataset.size(); i++) {
         if (i != nPIndex) { //Don't compare the point with itself
@@ -77,15 +77,22 @@ double sigma(std::vector<std::vector<double>> rDataset, int nPIndex) {
 
     std::sort(aDistances.begin(), aDistances.end());
 
-    return aDistances[6];
+    return aDistances[K];
 }
 
 int main(int argc, char* argv[]) {
 
-    if (argc != 3) {
-        std::cout << "Usage: ./runner [Dataset] [# Exp. Clusters]" << std::endl;
+    if (argc != 4) {
+        std::cout << "Usage: ./runner [Dataset] [# Exp. Clusters] [K Value]" << std::endl;
         return -1;
     }
+
+    /*
+    * Neighboor to consider for the tuning parameter.
+    * starting from 0
+    */
+
+    int K = std::stoi(argv[3]);
 
     std::vector<std::vector<double> > aInput = readData(argv[1]);
 
@@ -96,7 +103,7 @@ int main(int argc, char* argv[]) {
     // calculate sigmas
     std::vector<double> aSigmas;
     for (int i=0; i<size; i++) {
-        aSigmas.push_back(sigma(aInput, i));
+        aSigmas.push_back(sigma(aInput, i, K));
     }
 
     for (unsigned int i=0; i < size; i++) {
@@ -122,18 +129,15 @@ int main(int argc, char* argv[]) {
     // output clustered items
     // items are ordered according to distance from cluster centre
 
-    std::fstream aResult;
-    aResult.open("output", std::fstream::out);
 
     for (unsigned int i=0; i < clusters.size(); i++) {
         for (int j = 0; j < clusters[i].size(); j++) {
            for (int k=0; k<aInput[clusters[i][j]].size(); k++) {
-               aResult << aInput[clusters[i][j]][k] << ",";
+               std::cout << aInput[clusters[i][j]][k] << ",";
            }
-           aResult << i << std::endl;
+           std::cout << i << std::endl;
         }
     }
 
-    aResult.close();
     return 0;
 }
