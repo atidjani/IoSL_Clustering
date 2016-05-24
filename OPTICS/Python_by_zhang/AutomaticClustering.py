@@ -20,7 +20,6 @@ import matplotlib.pyplot as plt
 from operator import itemgetter
 import sys
 
-
 def isLocalMaxima(index,RPlot,RPoints,nghsize):
     # 0 = point at index is not local maxima
     # 1 = point at index is local maxima
@@ -51,8 +50,6 @@ def findLocalMaxima(RPlot, RPoints, nghsize):
     
     return sorted(localMaximaPoints, key=localMaximaPoints.__getitem__ , reverse=True)
     
-
-
 def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size):
     #node is a node or the root of the tree in the first call
     #parentNode is parent node of N or None if node is root of the tree
@@ -89,8 +86,7 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
         #if splitpoint is not significant, ignore this split and continue
         clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size)
         return
-        
-        
+          
     #only check a certain ratio of points in the child nodes formed to the left and right of the maxima
     checkRatio = .8
     checkValue1 = int(NP.round(checkRatio*len(Node1.points)))
@@ -172,7 +168,6 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
             node.addChild(nl[0])
             clusterTree(nl[0], node, nl[1], RPlot, RPoints, min_cluster_size)
         
-
 def printTree(node, num):
     if node is not None:
         print "Level %d" % num
@@ -195,7 +190,6 @@ def writeTree(fileW, locationMap, RPoints, node, num):
         for n in node.children:
             writeTree(fileW, locationMap, RPoints, n, num+1)
 
-
 def getArray(node,num, arr):
     if node is not None:
         if len(arr) <= num:
@@ -211,7 +205,6 @@ def getArray(node,num, arr):
     else:
         return arr
 
-
 def getLeaves(node, arr):
     if node is not None:
         if node.splitpoint == -1:
@@ -219,7 +212,6 @@ def getLeaves(node, arr):
         for n in node.children:
             getLeaves(n,arr)
     return arr
-
 
 def graphTree(root, RPlot):
 
@@ -237,7 +229,6 @@ def graphTree(root, RPlot):
      transparent=False, bbox_inches=None, pad_inches=0.1)
     plt.show()
 
-            
 def graphNode(node, num, ax):
     ax.hlines(num,node.start,node.end,color="red")
     for item in node.children:
@@ -264,11 +255,8 @@ def automaticCluster(RPlot, RPoints):
     
     rootNode = TreeNode(RPoints, 0, len(RPoints), None)
     clusterTree(rootNode, None, localMaximaPoints, RPlot, RPoints, min_cluster_size)
-
-
     return rootNode
     
-
 class TreeNode(object):
     def __init__(self, points, start, end, parentNode):
         self.points = points
