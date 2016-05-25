@@ -10,8 +10,9 @@ RUN mv /etc/pacman.d/mirrorlist.pacnew /etc/pacman.d/mirrorlist
 
 
 #Install required software
-RUN pacman -S python python-django python-psycopg2 --noconfirm
+RUN pacman -S python python-django python-psycopg2 eigen2 --noconfirm
 
+#For production
 # Set env variables used in this Dockerfile (add a unique prefix, such as DOCKYARD)
 # Local directory with project source
 ENV DOCKYARD_SRC=.
@@ -21,7 +22,12 @@ ENV DOCKYARD_SRVHOME=/srv
 ENV DOCKYARD_SRVPROJ=/srv/visualizer
 
 # Copy application source code to SRCDIR
-COPY $DOCKYARD_SRC $DOCKYARD_SRVPROJ
+# Self-tuning spectral clustering
+#COPY $DOCKYARD_SRC/STSC $DOCKYARD_SRVPROJ/STSC
+# Self-tuning spectral clustering
+#COPY $DOCKYARD_SRC/docker-entrypoint.sh $DOCKYARD_SRVPROJ/docker-entrypoint.sh
+# Visualizer
+#COPY $DOCKYARD_SRC/Visualizer $DOCKYARD_SRVPROJ/Visualizer
 
 #TODO: Compile the c++ code
 

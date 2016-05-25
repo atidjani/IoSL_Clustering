@@ -7,5 +7,7 @@ services:
     command: ./docker-entrypoint.sh
     ports:
       - "8000:8000"
+    volumes:
+      - .:/srv/visualizer
     depends_on:
       - db
