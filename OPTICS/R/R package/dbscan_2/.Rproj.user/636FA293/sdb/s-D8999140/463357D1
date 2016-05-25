@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(\"dbscan\")\nset.seed(2)\nn <- 400\nx <- cbind(\n  x = runif(4, 0, 1) + rnorm(n, sd=0.1),\n  y = runif(4, 0, 1) + rnorm(n, sd=0.1)\n)\nplot(x, col=rep(1:4, time = 100))\n### run OPTICS\nres <- optics(x, eps = 10,  minPts = 10)\nres\n### get order\nres$order\n### plot produces a reachability plot\nplot(res)\n### identify clusters by cutting the reachability plot (black is noise)\nres <- optics_cut(res, eps_cl = .065)\nres\nplot(res)\nplot(x, col = res$cluster+1L)\n### re-cutting at a higher eps threshold\nres <- optics_cut(res, eps_cl = .1)\nres\nplot(res)\nplot(x, col = res$cluster+1L)\n### identify clusters using the hierarchically Xi method\n# res <- opticsXi(res, xi = 0.05)\n# res\n# plot(res)\n# plot(x, col = res$cluster+1L)\n# Xi cluster structure\n# res$clusters_xi\n### use OPTICS on a precomputed distance matrix\nd <- dist(x)\nres <- optics(x, eps = 1, minPts = 10)\nplot(res)\n",
+    "created" : 1464205440390.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2704067302",
+    "id" : "463357D1",
+    "lastKnownWriteTime" : 1461677894,
+    "last_content_update" : 1461677894,
+    "path" : "~/IoSL_Clustering/OPTICS/R/script_optics.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
