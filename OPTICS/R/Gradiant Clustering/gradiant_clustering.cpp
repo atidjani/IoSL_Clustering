@@ -101,6 +101,7 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, int minPts, 
     listOfClusters.insert(listOfClusters.end(),cluster);
   }
   
+  
   return listOfClusters;
 }
 

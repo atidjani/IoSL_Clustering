@@ -60,9 +60,12 @@ optics_gradiant <- function(x, eps, minPts = 5, eps_cl, xi, search = "kdtree",
                     as.integer(search), as.integer(bucketSize),
                     as.integer(splitRule), as.double(approx), frNN)
   
+  res <- gradient_clustering(ret$order, ret$reachdist, ret$minPts, -0.5);
+  
   ret$minPts <- minPts
   ret$eps <- eps
   ret$eps_cl <- NA
+  ret$cluster <- res 
   class(ret) <- "optics"
   
   ### find clusters
@@ -100,10 +103,6 @@ optics_cut <- function(x, eps_cl) {
   x$cluster <- cluster
   
   x
-}
-
-gradient_clustering <- function(x, t){
-  reachdist <- x$reachdist[x$order]
 }
 
 print.optics <- function(x, ...) {
