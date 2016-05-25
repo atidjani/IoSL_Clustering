@@ -17,7 +17,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-optics <- function(x, eps, minPts = 5, eps_cl, xi, search = "kdtree",
+optics_gradiant <- function(x, eps, minPts = 5, eps_cl, xi, search = "kdtree",
                    bucketSize = 10, splitRule = "suggest", approx = 0) {
   
   splitRule <- pmatch(toupper(splitRule), .ANNsplitRule)-1L
@@ -66,8 +66,9 @@ optics <- function(x, eps, minPts = 5, eps_cl, xi, search = "kdtree",
   class(ret) <- "optics"
   
   ### find clusters
-  if(!missing(eps_cl)) ret <- optics_cut(ret, eps_cl)
-  if(!missing(xi)) ret <- opticsXi(ret, xi)
+  # if(!missing(eps_cl)) ret <- optics_cut(ret, eps_cl)
+  # if(!missing(xi)) ret <- opticsXi(ret, xi)
+  
   
   ret
 }
@@ -99,6 +100,10 @@ optics_cut <- function(x, eps_cl) {
   x$cluster <- cluster
   
   x
+}
+
+gradient_clustering <- function(x, t){
+  reachdist <- x$reachdist[x$order]
 }
 
 print.optics <- function(x, ...) {

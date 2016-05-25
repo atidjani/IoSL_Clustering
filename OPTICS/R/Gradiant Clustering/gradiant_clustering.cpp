@@ -28,6 +28,11 @@ float GD(int y,NumericVector reachdist){
   return (reachdist[y+1] - reachdist[y]) + (reachdist[y-1] - reachdist[y]);
 }
 
+std::set<int> BuildCluster(IntegerVector co, int startPnt, int endPnt){
+  set<int> cluster;
+  
+}
+
 // [[Rcpp::export]]
 List gradient_clustering(IntegerVector co, NumericVector reachdist, int minPts, float t) {
   std::stack<int> startPts;
@@ -35,7 +40,7 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, int minPts, 
   std::set<int> currentCluster;
   int i =0;
   int o = co[i];
-  startPts.push(o);
+  startPts.push(i);// pushing the index of the point instead of the point itself
   i++;
   while(i < co.size()){
     o = co[i];
@@ -49,23 +54,23 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, int minPts, 
           }
           
           currentCluster.clear();
-          if(reachdist[startPts.top()] <= reachdist[o]){
+          if(reachdist[startPts.top()] <= reachdist[co[i]]){
             startPts.pop();
           }
           
-          while(reachdist[startPts.top()] < reachdist[o]){
+          while(reachdist[startPts.top()] < reachdist[co[i]]){
             //setOfClusters.insert("set of objects from startPts.top() to last end point");
             startPts.pop();
           }
           
           //setOfClusters.insert("set of objects from startPts.top() to last end point");
           
-          if(reachdist[co[i+1]] < reachdist[o]){
-            startPts.push(o);
+          if(reachdist[co[i+1]] < reachdist[co[i]]){
+            startPts.push(i);
           }
        
         }else{
-          if(reachdist[co[i+1]] > reachdist[o]){
+          if(reachdist[co[i+1]] > reachdist[co[i]]){
             //currCluster := set of objects from startPts.top() to o;
           }
         }
@@ -73,7 +78,7 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, int minPts, 
     }else{
       while(!startPts.empty()){
         //currCluster := set of objects from startPts.top() to o;
-        if((reachdist[startPts.top()] > reachdist[o]) && (currentCluster.size() >= minPts)){
+        if((reachdist[startPts.top()] > reachdist[co[i]]) && (currentCluster.size() >= minPts)){
           //setOfClusters.add(currCluster);
         }
         startPts.pop();
