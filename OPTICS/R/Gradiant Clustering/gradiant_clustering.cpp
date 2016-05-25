@@ -29,8 +29,11 @@ float GD(int y,NumericVector reachdist){
 }
 
 std::set<int> BuildCluster(IntegerVector co, int startPnt, int endPnt){
-  set<int> cluster;
-  
+  std::set<int> cluster;
+  for(int i = startPnt; i <= endPnt; i++){
+    cluster.insert(co[i]);
+  }
+  return cluster;
 }
 
 // [[Rcpp::export]]
@@ -59,11 +62,12 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, int minPts, 
           }
           
           while(reachdist[startPts.top()] < reachdist[co[i]]){
-            //setOfClusters.insert("set of objects from startPts.top() to last end point");
+            setOfClusters.insert(BuildCluster(co,startPts.top(),i));
             startPts.pop();
           }
           
           //setOfClusters.insert("set of objects from startPts.top() to last end point");
+          setOfClusters.insert(BuildCluster(co,startPts.top(),i));
           
           if(reachdist[co[i+1]] < reachdist[co[i]]){
             startPts.push(i);
@@ -72,31 +76,33 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, int minPts, 
         }else{
           if(reachdist[co[i+1]] > reachdist[co[i]]){
             //currCluster := set of objects from startPts.top() to o;
+            currentCluster = BuildCluster(co,startPts.top(),i);
           }
         }
       }
     }else{
       while(!startPts.empty()){
         //currCluster := set of objects from startPts.top() to o;
+        currentCluster = BuildCluster(co,startPts.top(),i);
         if((reachdist[startPts.top()] > reachdist[co[i]]) && (currentCluster.size() >= minPts)){
           //setOfClusters.add(currCluster);
+          setOfClusters.insert(currentCluster);
         }
         startPts.pop();
       }
     }
-    
+  }
+  //return list of clusters
+  List listOfClusters;
+  for(std::set<std::set<int> >::iterator it = setOfClusters.begin(); it != setOfClusters.end(); ++it){
+    std::set<int> currCluster = *it;
+    NumericVector cluster(currCluster.size());
+    cluster.assign(currCluster.begin(),currCluster.end());
+    listOfClusters.insert(listOfClusters.end(),cluster);
   }
   
+  return listOfClusters;
 }
 
 
 
-
-// You can include R code blocks in C++ files processed with sourceCpp
-// (useful for testing and development). The R code will be automatically 
-// run after the compilation.
-//
-
-/*** R
-timesTwo(42)
-*/
