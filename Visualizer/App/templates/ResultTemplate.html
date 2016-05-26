@@ -42,7 +42,12 @@
     .attr("r", 2)
     .attr("fill", function(d) { return colors[d[2]]; });
 
-
-
   </script>
+
+  <form action="/result" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Recompute" />
+  </form>
+
 </body>
