@@ -36,3 +36,5 @@
 
 # Build Directories
 build/
+migrations/
+__pycache__/
