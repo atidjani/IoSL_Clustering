@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 # Create your models here.
 
 class Dataset(models.Model):
-    creationTime = models.DateField(auto_now_add=True)
+    creationTime = models.DateTimeField(auto_now_add=True)
     data = models.TextField();
 
     def clean(self) :
