@@ -8,6 +8,6 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/srv/visualizer
+      - ./Visualizer:/srv/visualizer/Visualizer
     depends_on:
       - db
