@@ -3,6 +3,7 @@
 *.ko
 *.obj
 *.elf
+*.pyc
 
 # Precompiled Headers
 *.gch
@@ -36,3 +37,4 @@
 
 # Build Directories
 build/
+migrations/
