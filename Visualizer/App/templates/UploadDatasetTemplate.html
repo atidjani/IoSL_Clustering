@@ -1,6 +1,22 @@
-<form action="/" method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form }}
-  <input type="submit" value="Submit" />
-</form>
-
+<html>
+  <head>
+    <title>STSC & OPTICS Visualizer</title>
+    {% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href="{% static 'uploader.css' %}" />
+  </head>
+  <body>
+    <div id="main">
+      <div id="title">
+        <p id="first">STSC-OPTICS</p>
+        <p id="second">Visualizer</p>
+      </div>
+      <form action="/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <div id="button">
+          <input type="submit" value="Compute" />
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

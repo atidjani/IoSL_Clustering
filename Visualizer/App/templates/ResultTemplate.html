@@ -1,53 +1,51 @@
 <head>
-  <style>
-    body {
-      text-align: center;
-    }
-
-    svg {
-      border: 2px solid #808080;
-      border-radius: 10px;
-    }
-  </style>
-
-</head>
-<body>
+  <title>STSC Result</title>
+  {% load staticfiles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'runner.css' %}" />
   <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  </head>
+<body>
+  <div id="main">
+    <div id="plot">
+      <script>
+        var height = 600;
+        var width = 600;
+        var result = {{ result }};
 
-  <script>
-
-  var height = 500;
-  var width = 500;
-  var result = {{ result }};
-
-  // Generate random colors
-  var numClusters = {{ numClusters }};
-  var colors = []
-  for (i=0; i<numClusters; i++) {
-    colors.push('#' + (Math.random().toString(16) + "000000").substring(2,8))
-  }
+        // Generate random colors
+        var numClusters = {{ numClusters }};
+        var colors = []
+        for (i=0; i<numClusters; i++) {
+          colors.push('#' + (Math.random().toString(16) + "000000").substring(2,8))
+        }
 
 
-  var svg = d3.select("body")
-                      .append("svg")
-                      .attr("width", width)
-                      .attr("height", height);
+        var svg = d3.select("#plot")
+                            .append("svg")
+                            .attr("width", width)
+                            .attr("height", height);
 
-  svg.selectAll("circle")
-    .data(result)
-    .enter()
-    .append("circle")
-    .attr("cx", function(d) { return d[0] * width; })
-    .attr("cy", function(d) { return d[1] * height; })
-    .attr("r", 2)
-    .attr("fill", function(d) { return colors[d[2]]; });
+        svg.selectAll("circle")
+          .data(result)
+          .enter()
+          .append("circle")
+          .attr("cx", function(d) { return d[0] * width; })
+          .attr("cy", function(d) { return d[1] * height; })
+          .attr("r", 2)
+          .attr("fill", function(d) { return colors[d[2]]; });
 
-  </script>
-
-  <form action="/result" method="POST">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Recompute" />
-  </form>
-
+        </script>
+    </div>
+    <div id="form">
+        <p> Parameters: </p>
+        <form action="/result" method="POST">
+          {% csrf_token %}
+          <div><label id="cluster"># Clusters:  </label>{{ form.numClusters }}</div>
+          <div><label id="k">K:  </label>{{ form.k}}</div>
+        <div id="button">
+          <input type="submit" value="Recompute" />
+        </div>
+    </form>
+    </div>
+  </div>
 </body>
