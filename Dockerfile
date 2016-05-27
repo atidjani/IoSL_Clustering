@@ -10,7 +10,10 @@ RUN mv /etc/pacman.d/mirrorlist.pacnew /etc/pacman.d/mirrorlist
 
 
 #Install required software
-RUN pacman -S python python-django python-psycopg2 eigen2 gcc make cmake --needed --noconfirm
+RUN pacman -S python python-pip python-django python-psycopg2 eigen2 gcc make cmake --noconfirm
+
+#Install django-crontab
+RUN pip install django-crontab
 
 #For production
 # Set env variables used in this Dockerfile (add a unique prefix, such as DOCKYARD)

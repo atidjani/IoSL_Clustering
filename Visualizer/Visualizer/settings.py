@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
     'App',
 ]
 
@@ -52,6 +53,7 @@ MIDDLEWARE_CLASSES = [
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_COOKIE_AGE = 6*60*60 # 6 hours
 
 ROOT_URLCONF = 'Visualizer.urls'
 
@@ -125,3 +127,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Cronjob
+
+CRONJOB = [
+	# Delete old entries every hour
+	('0 * * * *', 'App.cron.deleteOldEntries')
+]
