@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>Error!</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'error.css' %}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        $(window).resize(function() {
+            $("#space").height($(window).height()/5);
+        });
+
+        $(document).ready(function() {
+            $("#space").height($(window).height()/5);
+
+        });
+
+    </script>
+  </head>
+  <body>
+    <div id="main">
+      <div id="space"></div>
+      <div id="content">
+        <div id="imgConteiner">
+            <img id="gandalf" src="{% static 'gandalf.png' %}" />
+        </div>
+        <div id="text">
+            <span id="first">Go back to the <a href="/">Uploader</a> Page!</span></br>
+            <span id="second">You Shall not execute!</span></br>
+            <span id="serious">Seriously: {{ error }}</span>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

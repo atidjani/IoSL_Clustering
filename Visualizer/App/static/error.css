@@ -1,0 +1,47 @@
+@import url(https://fonts.googleapis.com/css?family=PT+Sans);
+
+body, html {
+  margin:0px;
+  height:100%;
+  background-image: url(background_texture.png);
+  background-repeat: repeat;
+  font-family: 'PT Sans', sans-serif;
+}
+
+#main {
+  background-color: #f2f2f2;
+  min-height:100%;
+  width: 800px;
+  margin:auto;
+}
+
+#imgConteiner {
+  width: 300px;
+  height: 400px;
+  display:inline-block;
+}
+
+#gandalf{
+  width: 300px;
+  height:400px;
+}
+
+#text {
+  margin: 0px;
+  padding-top: 150px;
+  padding-left: 15px;
+  width: 450px;
+  display: inline-block;
+  vertical-align: top;
+  color: #DC143C;
+  text-align: center;
+}
+
+#first {
+  font-size: 30px;
+}
+
+#second {
+  font-size: 24px;
+}
+

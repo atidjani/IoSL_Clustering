@@ -3,6 +3,7 @@ import os
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ValidationError
+from django.template import RequestContext
 
 from .forms import *
 from .models import Dataset
@@ -18,7 +19,7 @@ def UploadDatasetView(request):
             try :
                 ds.full_clean()
             except ValidationError:
-                return HttpResponse("Error")
+                return HttpResponseRedirect('/error')
 
             ds.save()
             request.session['ds'] = ds.id
@@ -63,3 +64,8 @@ def ResultView(request) :
     output['form'] = form
 
     return render(request, 'ResultTemplate.html', output)
+
+# Show the error page
+def ErrorView(request) :
+    return render(request, 'ErrorPage.html', {'error': 'Not supported dataset'})
+
