@@ -33,3 +33,19 @@ class StscRunner :
 
         return {'numClusters': numClusters, 'result': resArray }
 
+
+class OpticsRunner():
+    __filePath = ""
+    __eps = 0.4
+    __min_pts = 5
+    __self_name = 'python'
+
+    def __init__ (self, filePath, eps = 0.4, min_pts = 5):
+        self.__filePath = filePath
+        self.__eps = eps
+        self.__min_pts = min_pts
+
+    def run(self):
+        args = [self.__filePath, str(self.__eps), str(self.__min_pts)]
+        proc = s.Popen(args, stdout = s.PIPE)
+        tmp = proc.stdout.read().decode('utf-8').split('\n')
