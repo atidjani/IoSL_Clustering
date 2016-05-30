@@ -129,8 +129,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Cronjob
-
-CRONJOB = [
+CRONJOBS = [
 	# Delete old entries every hour
-	('0 * * * *', 'App.cron.deleteOldEntries')
+	('* * * * *', 'Visualizer.Visualizer.App.cron.deleteOldEntries'),
 ]

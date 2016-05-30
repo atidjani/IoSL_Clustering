@@ -13,6 +13,7 @@ RUN mv /etc/pacman.d/mirrorlist.pacnew /etc/pacman.d/mirrorlist
 RUN pacman -S python python-pip python-django python-psycopg2 eigen2 gcc make cmake --noconfirm
 
 #Install django-crontab
+RUN pacman -S cronie --noconfirm
 RUN pip install django-crontab
 
 #For production
