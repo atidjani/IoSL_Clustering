@@ -1,7 +1,7 @@
 library("dbscan")
 plot(data_5, col=rep(1:4, time = 100))
 ### run OPTICS
-res <- gradient(x, eps = 10,  minPts = 10)
+res <- gradient(data_5, eps = 10,  minPts = 10)
 res
 ### get order
 res$order
