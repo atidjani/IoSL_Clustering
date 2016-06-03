@@ -8,6 +8,7 @@ from django.template import RequestContext
 from .forms import *
 from .models import Dataset
 from .runners import StscRunner
+from .noise import Noise
 
 
 # Uploader view
@@ -36,6 +37,10 @@ def ResultView(request) :
     if request.session.get('ds', None) == None :
         return HttpResponseRedirect('/')
 
+    # Get element
+    dsId = request.session.get('ds')
+    ds = Dataset.objects.get(id=dsId)
+
     if request.method == 'GET':
         # GET - First request prepare the form
         # Create Form
@@ -49,12 +54,23 @@ def ResultView(request) :
         if form.is_valid() :
             numClusters = form.cleaned_data['numClusters']
             k = form.cleaned_data['k'] - 1
+
+            functions = form.cleaned_data['noiseFunctions']
+            sigma = form.cleaned_data['sigma']
+            numPoints = form.cleaned_data['numPoints']
+
+            if (functions != '') :
+                # Generate noise points
+                noise = Noise(functions, sigma)
+                noiseStr = noise.generatePoints(numPoints)
+                ds.noise = noiseStr
+                ds.save()
+            else :
+                ds.noise = ''
+                ds.save()
         else :
             return HttpResponseRedirect('/result')
 
-    # Get element
-    dsId = request.session.get('ds')
-    ds = Dataset.objects.get(id=dsId)
     filePath = ds.writeFile() # Write dataset on disk
     stsc = StscRunner(filePath, numClusters, k) # Execution of STSC
     output = stsc.run()
