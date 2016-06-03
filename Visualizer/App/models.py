@@ -11,7 +11,8 @@ from django.core.exceptions import ValidationError
 
 class Dataset(models.Model):
     creationTime = models.DateTimeField(auto_now_add=True)
-    data = models.TextField();
+    data = models.TextField()
+    noise = models.TextField(blank=True)
 
     def clean(self) :
         buffer = io.StringIO(self.data)
@@ -33,5 +34,6 @@ class Dataset(models.Model):
     def writeFile(self) :
         filePath = "/tmp/" + hashlib.md5(str(time.time()).encode('utf-8')).hexdigest()
         with open(filePath, "w") as f:
-            f.write(self.data);
+            f.write(self.data + '\n')
+            f.write(self.noise)
         return filePath
