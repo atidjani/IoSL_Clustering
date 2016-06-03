@@ -66,12 +66,16 @@
         <p> Parameters: </p>
         <form action="/result" method="POST">
           {% csrf_token %}
+          {{ form.non_field_errors }}
+          {{ form.numClusters.errors }}
           <div><label id="cluster">Max # Clusters:  </label>{{ form.numClusters }}</div>
+          {{ form.k.errors }}
           <div><label id="k">K:  </label>{{ form.k }}</div>
+          {{ form.noiseFunctions.errors }}
           <div><label id="noise">Noise Functions:  </label>{{ form.noiseFunctions }}</div>
-          <div><label id="sigma">Sigma:  </label>{{ form.sigma }}</div>
-          <div><label id="points"># Noise Points:  </label>{{ form.numPoints }}</div>
-        <div id="button">
+          {{ form.generateNoise.errors }}
+          <div><label id="gen">Generate new noise:  </label>{{ form.generateNoise }}</div>
+       <div id="button">
           <input type="submit" value="Recompute" />
         </div>
     </form>

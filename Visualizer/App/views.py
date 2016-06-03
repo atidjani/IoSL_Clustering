@@ -27,7 +27,7 @@ def UploadDatasetView(request):
             return HttpResponseRedirect('/result')
     else :
         # Trick to avoid None session_key at the first request
-        request.session['one'] = "One entry to rule them all and in the session bind them"
+        request.session['noise'] = ''
         form = UploadDatasetForm()
     return render(request, 'UploadDatasetTemplate.html', {'form': form})
 
@@ -56,16 +56,15 @@ def ResultView(request) :
             k = form.cleaned_data['k'] - 1
 
             functions = form.cleaned_data['noiseFunctions']
-            sigma = form.cleaned_data['sigma']
-            numPoints = form.cleaned_data['numPoints']
+            generateNoise = form.cleaned_data['generateNoise']
 
-            if (functions != '') :
+            if (functions != '' and generateNoise) :
                 # Generate noise points
-                noise = Noise(functions, sigma)
-                noiseStr = noise.generatePoints(numPoints)
+                noise = Noise(functions)
+                noiseStr = noise.generatePoints()
                 ds.noise = noiseStr
                 ds.save()
-            else :
+            elif (functions == ''):
                 ds.noise = ''
                 ds.save()
         else :
