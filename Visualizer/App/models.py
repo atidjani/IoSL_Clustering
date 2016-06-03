@@ -34,6 +34,6 @@ class Dataset(models.Model):
     def writeFile(self) :
         filePath = "/tmp/" + hashlib.md5(str(time.time()).encode('utf-8')).hexdigest()
         with open(filePath, "w") as f:
-            f.write(self.data)
+            f.write(self.data + '\n')
             f.write(self.noise)
         return filePath
