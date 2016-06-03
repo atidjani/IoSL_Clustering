@@ -1,4 +1,3 @@
-import re
 import parser
 import numpy as np
 
@@ -30,11 +29,11 @@ class Noise() :
 
     def parseFunction(self, strFunction) :
         # Function format (function, x_low_limit, x_bot_limit)
-        tokenList = re.split("[\(,\)]", strFunction)
-        syntaxTree =  parser.expr(tokenList[1])
+        tokenList = strFunction.split(',')
+        syntaxTree =  parser.expr(tokenList[0][1:]) #Remove initial (
         code = syntaxTree.compile()
-        xBot = float(tokenList[2])
-        xTop = float(tokenList[3])
+        xBot = float(tokenList[1])
+        xTop = float(tokenList[2][:-1]) # Remove final )
 
         return Function(code, xBot, xTop)
 
