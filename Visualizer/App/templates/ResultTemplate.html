@@ -19,6 +19,15 @@
           colors.push('#' + (Math.random().toString(16) + "000000").substring(2,8))
         }
 
+        // Scale the data in input
+		var scalePadding = 30;
+        var xScale = d3.scale.linear()
+                            .domain([d3.min(result, function(d) { return d[0]; }), d3.max(result, function(d) { return d[0]; })])
+							.range([scalePadding, width-scalePadding]);
+
+        var yScale = d3.scale.linear()
+                            .domain([d3.min(result, function(d) { return d[1]; }), d3.max(result, function(d) { return d[1]; })])
+							.range([height-scalePadding, scalePadding]);
 
         var svg = d3.select("#plot")
                             .append("svg")
@@ -29,10 +38,27 @@
           .data(result)
           .enter()
           .append("circle")
-          .attr("cx", function(d) { return d[0] * width; })
-          .attr("cy", function(d) { return d[1] * height; })
+          .attr("cx", function(d) { return xScale(d[0]); })
+          .attr("cy", function(d) { return yScale(d[1]); })
           .attr("r", 2)
           .attr("fill", function(d) { return colors[d[2]]; });
+
+
+		// Create X axis
+        svg.append("g")
+           .attr("class", "axis")
+           .attr("transform", "translate(0," + (height - scalePadding) + ")")
+           .call(d3.svg.axis()
+                   .scale(xScale)
+                   .orient("bottom"));
+
+		// Create Y axis
+        svg.append("g")
+           .attr("class", "axis")
+		   .attr("transform", "translate(" + xScale(0) + ",0)")
+           .call(d3.svg.axis()
+                   .scale(yScale)
+                   .orient("left"));
 
         </script>
     </div>
@@ -40,8 +66,11 @@
         <p> Parameters: </p>
         <form action="/result" method="POST">
           {% csrf_token %}
-          <div><label id="cluster"># Clusters:  </label>{{ form.numClusters }}</div>
-          <div><label id="k">K:  </label>{{ form.k}}</div>
+          <div><label id="cluster">Max # Clusters:  </label>{{ form.numClusters }}</div>
+          <div><label id="k">K:  </label>{{ form.k }}</div>
+          <div><label id="noise">Noise Functions:  </label>{{ form.noiseFunctions }}</div>
+          <div><label id="sigma">Sigma:  </label>{{ form.sigma }}</div>
+          <div><label id="points"># Noise Points:  </label>{{ form.numPoints }}</div>
         <div id="button">
           <input type="submit" value="Recompute" />
         </div>
