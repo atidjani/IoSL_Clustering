@@ -24,6 +24,16 @@ svg {
   border-radius: 10px;
 }
 
+.axis path, .axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-size: 9px;
+}
+
 #form {
   width: 400px;
   margin: auto;
