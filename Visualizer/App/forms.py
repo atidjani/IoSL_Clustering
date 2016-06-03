@@ -29,7 +29,7 @@ class ParametersSTSC(forms.Form):
         # Validate function field
         fun = re.sub('[\s+]', '', fun) #Remove spaces
         # DON'T FUCK UP WITH THIS LINE.
-        reg = r"(\([x0-9\+\-\*\/\.]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?\))(\,(\([x0-9\+\-\*\/\.\ ]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?\)))*"
+        reg = r"(\([x0-9\+\-\*\/\.]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?\))(\;(\([x0-9\+\-\*\/\.\ ]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?\)))*"
         if (fun != '') and (not re.fullmatch(reg, fun)) :
             self.add_error("noiseFunctions", "Format not correct")
 
