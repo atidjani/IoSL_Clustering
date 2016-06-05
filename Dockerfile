@@ -16,6 +16,9 @@ RUN pacman -S python python-pip python-django python-psycopg2 eigen2 gcc make cm
 RUN pacman -S cronie --noconfirm
 RUN pip install django-crontab
 
+#Install other python libraries
+RUN pip install numpy
+
 #For production
 # Set env variables used in this Dockerfile (add a unique prefix, such as DOCKYARD)
 # Local directory with project source
@@ -38,8 +41,8 @@ RUN make
 
 # Entrypoint script
 COPY $DOCKYARD_SRC/docker-entrypoint.sh $DOCKYARD_SRVPROJ/docker-entrypoint.sh
+RUN chmod 755 $DOCKYARD_SRVPROJ/docker-entrypoint.sh
 # Visualizer -- For development mounted as volume
 #COPY $DOCKYARD_SRC/Visualizer $DOCKYARD_SRVPROJ/Visualizer
 
-# Copy entrypoint script into the image
 WORKDIR $DOCKYARD_SRVPROJ

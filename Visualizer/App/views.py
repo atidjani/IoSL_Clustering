@@ -8,6 +8,7 @@ from django.template import RequestContext
 from .forms import *
 from .models import Dataset
 from .runners import StscRunner
+from .noise import Noise
 
 
 # Uploader view
@@ -26,7 +27,7 @@ def UploadDatasetView(request):
             return HttpResponseRedirect('/result')
     else :
         # Trick to avoid None session_key at the first request
-        request.session['one'] = "One entry to rule them all and in the session bind them"
+        request.session['noise'] = ''
         form = UploadDatasetForm()
     return render(request, 'UploadDatasetTemplate.html', {'form': form})
 
@@ -35,6 +36,10 @@ def ResultView(request) :
     # You fool. Go back to the Uploader View. The ds is not set
     if request.session.get('ds', None) == None :
         return HttpResponseRedirect('/')
+
+    # Get element
+    dsId = request.session.get('ds')
+    ds = Dataset.objects.get(id=dsId)
 
     if request.method == 'GET':
         # GET - First request prepare the form
@@ -49,12 +54,22 @@ def ResultView(request) :
         if form.is_valid() :
             numClusters = form.cleaned_data['numClusters']
             k = form.cleaned_data['k'] - 1
+
+            functions = form.cleaned_data['noiseFunctions']
+            generateNoise = form.cleaned_data['generateNoise']
+
+            if (functions != '' and generateNoise) :
+                # Generate noise points
+                noise = Noise(functions)
+                noiseStr = noise.generatePoints()
+                ds.noise = noiseStr
+                ds.save()
+            elif (functions == ''):
+                ds.noise = ''
+                ds.save()
         else :
             return HttpResponseRedirect('/result')
 
-    # Get element
-    dsId = request.session.get('ds')
-    ds = Dataset.objects.get(id=dsId)
     filePath = ds.writeFile() # Write dataset on disk
     stsc = StscRunner(filePath, numClusters, k) # Execution of STSC
     output = stsc.run()

@@ -88,3 +88,4 @@ class OpticsRunner():
 # path = os.getcwd()
 # obj = OpticsRunner('%s/Datasets/2.txt' %path_proj,0.4,3)
 # obj.run('python')
+
