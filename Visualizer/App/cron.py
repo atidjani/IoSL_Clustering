@@ -1,12 +1,12 @@
 import time
-import os,django,sys
+import os,django,sys,re
 from django.conf import settings
-path = os.getcwd()
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'%s/Visualizer' %path)))
+curr_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+path = re.search(r'(.*/Visualizer)',curr_file_path).group(1)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'%s' %path)))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Visualizer.settings")
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
-import django
 django.setup()
 
 from App.models import Dataset
