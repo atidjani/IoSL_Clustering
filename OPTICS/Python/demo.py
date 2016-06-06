@@ -2,7 +2,7 @@
 Created on Mar 17, 2012
 
 @author: Amy X Zhang
-axz@mit.edu 
+axz@mit.edu
 http://people.csail.mit.edu
 
 
@@ -51,7 +51,7 @@ class Optics():
             try:
                 file_reader = csv.reader(f, delimiter=',')
             except IOError:
-                print "Error Reading csv File", file_reader
+                print ("Error Reading csv File" + str(file_reader))
                 sys.exit()
             for row in file_reader:
                 p_tuple = [float(row[0]),float(row[1])]

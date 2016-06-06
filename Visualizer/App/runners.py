@@ -1,11 +1,11 @@
 import subprocess as s
 import os,django,sys,re
-curr_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-path = re.search(r'(.*/Visualizer)',curr_file_path).group(1)
-path_proj = re.search(r'(.*/)',path).group(1)
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'%s' %path)))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'%s/OPTICS/Python' %path_proj)))
-from demo import Optics
+#curr_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+#path = re.search(r'(.*/Visualizer)',curr_file_path).group(1)
+#path_proj = re.search(r'(.*/)',path).group(1)
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'%s' %path)))
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'%s/OPTICS/Python' %path_proj)))
+#from demo import Optics
 
 '''
 This class is responsible of running the self-tuning spectral clustering
@@ -58,9 +58,10 @@ class OpticsRunner():
         self.__min_pts = min_pts
 
     def run_optics_python(self):
-        opt = Optics()
-        numClusters, points = opt.demo(self.__filePath, str(self.__eps), str(self.__min_pts))
-        return numClusters, points
+         return ''
+#        opt = Optics()
+#        numClusters, points = opt.demo(self.__filePath, str(self.__eps), str(self.__min_pts))
+#        return numClusters, points
 
     def run_optics_java(self):
         return ''

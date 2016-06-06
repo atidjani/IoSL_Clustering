@@ -31,6 +31,9 @@ ENV DOCKYARD_SRVPROJ=/srv/visualizer
 # Copy application source code to SRCDIR
 # Self-tuning spectral clustering
 COPY $DOCKYARD_SRC/STSC/cpp $DOCKYARD_SRVPROJ/STSC/cpp
+# OPTICS Python
+COPY $DOCKYARD_SRC/OPTICS/Python $DOCKYARD_SRVPROJ/OPTICS/Python
+
 # Compile
 WORKDIR $DOCKYARD_SRVPROJ/STSC/cpp/build
 RUN cmake ../lib
