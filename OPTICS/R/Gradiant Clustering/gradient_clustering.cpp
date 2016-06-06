@@ -17,10 +17,6 @@ using namespace Rcpp;
 //   http://gallery.rcpp.org/
 //
 
-float distance(NumericMatrix data, int pt1, int pt2){
-  
-  return sqrt(pow(data(pt1,0) - data(pt2,0),2) + pow(data(pt1,1) - data(pt2,1),2));
-}
 
 float w = 0.1;
 float II(int y,NumericVector reachdist){
@@ -39,9 +35,11 @@ float GD(int y,NumericVector reachdist){
 std::set<int> BuildCluster(IntegerVector co, int startPnt, int endPnt, NumericVector clusterId, int id){
   std::set<int> cluster;
   for(int i = startPnt; i <= endPnt; i++){
-    cluster.insert(co[i]);
-    if(clusterId[i] == -1)clusterId[i]=id;
+      cluster.insert(co[i]);
+      if(clusterId[i] == -1)clusterId[i]=id;
   }
+  
+  //+std::cout << cluster.size() << std::endl;
   return cluster;
 }
 
@@ -64,7 +62,7 @@ float calculateW(NumericVector dists){
 }
 
 // [[Rcpp::export]]
-NumericVector gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVector coredist, int minPts, float t) {
+List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVector coredist, int minPts, float t) {
   
   w = calculateW(reachdist);
   std::cout << w <<std::endl;
@@ -73,17 +71,17 @@ NumericVector gradient_clustering(IntegerVector co, NumericVector reachdist, Num
   std::stack<int> startPts;
   std::set<std::set<int> > setOfClusters;
   std::set<int> currentCluster;
-  int id  = 0;
+  int id  = 1;
   int i =0;
   int o = co[i];//first point of the ordering 
   startPts.push(i);// pushing the index of the point instead of the point itself
   i++;
-  while(i < co.size()){
+  while(i < co.size()-1){
     o = co[i];
     i++;
-    if(i < co.size()){
+    if(i < co.size()-1){
       if(II(i,reachdist) > t){
-        std::cout << "Inflection point " << i <<std::endl;
+        //std::cout << "Inflection point " << i <<std::endl;
         if(GD(i,reachdist) > 0){ 
 
           if(currentCluster.size() >= minPts){ // first object outside a cluster
@@ -122,6 +120,7 @@ NumericVector gradient_clustering(IntegerVector co, NumericVector reachdist, Num
     }else{
       while(!startPts.empty()){
         //currCluster := set of objects from startPts.top() to o;
+        //std::cout << startPts.top() << " ++++ " << i << std::endl;
         currentCluster = BuildCluster(co,startPts.top(),i,clusterId, id);
         id++;
         if((reachdist[startPts.top()] > reachdist[i]) && (currentCluster.size() >= minPts)){
@@ -143,8 +142,8 @@ NumericVector gradient_clustering(IntegerVector co, NumericVector reachdist, Num
     listOfClusters.insert(listOfClusters.end(),cluster);
   }
 
-  //return listOfClusters;
-  return clusterId;
+  return listOfClusters;
+  //return clusterId;
 }
 
 
