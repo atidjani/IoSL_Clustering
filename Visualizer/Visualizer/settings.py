@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_crontab',
     'App',
 ]
 
@@ -128,8 +127,3 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Cronjob
-CRONJOBS = [
-	# Delete old entries every hour
-	('* * * * *', 'Visualizer.Visualizer.App.cron.deleteOldEntries'),
-]

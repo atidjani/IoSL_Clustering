@@ -15,7 +15,7 @@ class Dataset(models.Model):
     noise = models.TextField(blank=True)
 
     def clean(self) :
-        buffer = io.StringIO(self.data)
+        buffer = io.StringIO(self.data.decode("utf-8"))
         for line in buffer.readlines():
             features = line.split(',')
 
