@@ -1,13 +1,8 @@
 #!/bin/bash
 
 # Run the Django development server
-python Visualizer/manage.py makemigrations
-python Visualizer/manage.py migrate
-
-# Start cronjob to delete old entries
-python Visualizer/manage.py crontab add
-python Visualizer/manage.py crontab show
-
+python2 Visualizer/manage.py makemigrations
+python2 Visualizer/manage.py migrate
 
 # Start server
-python Visualizer/manage.py runserver 0.0.0.0:8000
+python2 Visualizer/manage.py runserver 0.0.0.0:8000
