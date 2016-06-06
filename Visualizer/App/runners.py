@@ -1,14 +1,5 @@
 import subprocess as s
 import os,django,sys,re
-curr_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-path = re.search(r'(.*/Visualizer)',curr_file_path).group(1)
-path_proj = re.search(r'(.*/)',path).group(1)
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'%s' %path)))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'%s/OPTICS/Python' %path_proj)))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Visualizer.settings")
-from django.core.wsgi import get_wsgi_application
-application = get_wsgi_application()
-django.setup()
 
 from demo import Optics
 
@@ -21,7 +12,6 @@ class StscRunner :
     __filePath = ""
     __K = 6
     __maxClusters = 0
-    # The absolute path is totally BS. I'll change it. Have faith
     __exePath = "STSC/cpp/runner/build/runner"
 
     def __init__ (self, filePath, maxClusters, K = 6) :
@@ -54,7 +44,7 @@ class OpticsRunner():
     __eps = 0.4
     __min_pts = 5
     __name = 'python'
-    # these path must be set in settings file and be imported
+    # these path should be relative to the containter -- see up
     __path_java = '/home/zahin/Dropbox/EIT_ICT/2nd_semester/IOS_Lab/IoSL_Clustering/OPTICS/'
     __path_r = 'home/zahin/Dropbox/EIT_ICT/2nd_semester/IOS_Lab/IoSL_Clustering/OPTICS/'
 
