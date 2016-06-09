@@ -24,15 +24,28 @@ def UploadDatasetView(request):
 
             ds.save()
             request.session['ds'] = ds.id
-            return HttpResponseRedirect('/result')
+            if form.cleaned_data['algorithm'] == 'STSC':
+                return HttpResponseRedirect('/resultSTSC')
+            else :
+                return HttpResponseRedirect('/resultOPTICS')
     else :
         # Trick to avoid None session_key at the first request
         request.session['noise'] = ''
         form = UploadDatasetForm()
     return render(request, 'UploadDatasetTemplate.html', {'form': form})
 
-# Result View
-def ResultView(request) :
+# Result View Optics
+def ResultViewOPTICS(request) :
+    # You fool. Go back to the Uploader View. The ds is not set
+    if request.session.get('ds', None) == None :
+        return HttpResponseRedirect('/')
+
+    return render(request, 'ResultTemplateOPTICS.html')
+
+
+
+# Result View STSC
+def ResultViewSTSC(request) :
     # You fool. Go back to the Uploader View. The ds is not set
     if request.session.get('ds', None) == None :
         return HttpResponseRedirect('/')
@@ -78,7 +91,7 @@ def ResultView(request) :
     # Put the form in the output to display it
     output['form'] = form
 
-    return render(request, 'ResultTemplate.html', output)
+    return render(request, 'ResultTemplateSTSC.html', output)
 
 # Show the error page
 def ErrorView(request) :
