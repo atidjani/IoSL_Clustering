@@ -1,0 +1,21 @@
+to excute optics on an already laoded dataset:
+
+library("dbscan")
+res1 <- optics(dataset, eps = 10,  minPts = 10)
+
+
+#
+#
+
+to execute gradient clustering on result of optics:
+
+result <- gradient_clustering(res1$order,res1$reachdist,res1$coredist,res1$minPts,-0.2)
+
+#
+#
+
+To plot the result:
+
+plot(res1$reachdist[res1$order], type="h", col=result[res1$order]+1L,
+ylab = "Reachability dist.", xlab = "OPTICS order",	
+main = "Reachability Plot")
