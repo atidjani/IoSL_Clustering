@@ -9,16 +9,15 @@ if (length(args)!=4) {
 }
 #read the dataset
 dataset <- read.table(file =args[1],
-                      header = FALSE, sep=",")
+                      sep=",")
 #parameters
 epsilon = args[2]
 minPoints = args[3]
-t = args[4]
-
-
+tValue = as.numeric(args[4])
 
 ## OPTICS
 #gives the optics result
 opt <- optics(dataset, eps = epsilon, minPts = minPoints)
+
 #gives the gradient result
-result<-gradient_clustering(opt$order,opt$reachdist,opt$coredist,opt$minPts,t)
+result <- gradient_clustering(co = opt$order,reachdist = opt$reachdist, coredist= opt$coredist, minPoints, t = tValue)
