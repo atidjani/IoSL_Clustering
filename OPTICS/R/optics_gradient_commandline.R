@@ -11,13 +11,14 @@ if (length(args)!=4) {
 dataset <- read.table(file =args[1],
                       sep=",")
 #parameters
-epsilon = args[2]
-minPoints = args[3]
-tValue = as.numeric(args[4])
-
+epsilon = as.double(args[2])
+minPoints = as.integer(args[3])
+tValue = as.double(args[4])
 ## OPTICS
 #gives the optics result
-opt <- optics(dataset, eps = epsilon, minPts = minPoints)
-
+res <- optics(dataset, eps = epsilon, minPts = minPoints)
 #gives the gradient result
-result <- gradient_clustering(co = opt$order,reachdist = opt$reachdist, coredist= opt$coredist, minPoints, t = tValue)
+result <-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts, tValue)
+#plot(res$reachdist[res$order], type="h", col=result[res$order]+1L,
+#     ylab = "Reachability dist.", xlab = "OPTICS order",	
+#     main = "Reachability Plot")
