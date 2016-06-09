@@ -2,14 +2,17 @@ library(dbscan)
 #import the dataset from the environment
 res <-optics(`5_dataset`,10,15)
 result3<-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts,-0.3)
-plot(res$reachdist[res$order], type="h", col=result3[res$order]+1L, ylab ="Reachability dist.", xlab ="OPTICS order", main = "Reachability Plot")
+plot(res$reachdist[res$order], type="h", col=result3[res$order]+1L,
+     ylab = "Reachability dist.", xlab = "OPTICS order",	
+     main = "Reachability Plot")
 #result three contains only one cluster and this is correct looking at the plot. Lower then -0.3 gives the same result
 result<-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts,-0.36)
 plot(res$reachdist[res$order], type="h", col=result[res$order]+1L, ylab ="Reachability dist.", xlab ="OPTICS order", main = "Reachability Plot")
-#observation: there is one cluster, while it should be three clusters, also not everything is included in the cluster and there are some noise(black) and (red ) lines in between
+#observation: There are three big clusters to be seen, however inside the Gradient Clustering algorithm still some errors can be found. For example the small one point clusters inside the two dense clusters.
 
 result2<-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts,-0.4)
-#In the second observation we can find that there are three clusters. One at the side which looks complete wrong(dark blue), one green one which contains the bigger one and two low blue clusters
+#In the second result we can find that there is again three clusters with small points in between, but this time the result is a bit worse, because one green point in the 
+#blue cluster, this means that it is close to the green cluster and produces with the core distance a wrong result. 
 #[[1]]
 # [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29
 # [30]  30  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58
@@ -31,14 +34,14 @@ result2<-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts,-0.
 # [[4]]
 # [1]  1  2  3  4  5  6 50 51 52 53 54 55 56
 
-plot(res$reachdist[res$order], type="h", col=result3[res$order]+1L, ylab ="Reachability dist.", xlab ="OPTICS order", main = "Reachability Plot")
+plot(res$reachdist[res$order], type="h", col=result2[res$order]+1L, ylab ="Reachability dist.", xlab ="OPTICS order", main = "Reachability Plot")
 
 result4<-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts,-0.5)
 plot(res$reachdist[res$order], type="h", col=result4[res$order]+1L, ylab ="Reachability dist.", xlab ="OPTICS order", main = "Reachability Plot")
-#Here something strange happens there is still clusters as in the result before, but now the bigger up area in the middle is seperated in two clusters
+#The ring here is broken with one other cluster in between. This makes the result not perfect. 
 result5<-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts,-0.6)
 plot(res$reachdist[res$order], type="h", col=result5[res$order]+1L, ylab ="Reachability dist.", xlab ="OPTICS order", main = "Reachability Plot")
-#Here almost everything is seen as noise which is strange, because we are expecting more clustrers in the up area however now more clusters are found. 
+#Here there are a lot of small clusters, which is likely for this t value
 result6<-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts,-07)
 plot(res$reachdist[res$order], type="h", col=result6[res$order]+1L, ylab ="Reachability dist.", xlab ="OPTICS order", main = "Reachability Plot")
 #The observation here is that there are many small clusters, this where compared to the next and the one before there are not many small clusters, this seems that the angle is super influencing
