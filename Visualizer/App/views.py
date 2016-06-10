@@ -24,25 +24,68 @@ def UploadDatasetView(request):
 
             ds.save()
             request.session['ds'] = ds.id
+
             if form.cleaned_data['algorithm'] == 'STSC':
                 return HttpResponseRedirect('/resultSTSC')
-            else :
-                return HttpResponseRedirect('/resultOPTICS')
+            elif form.cleaned_data['algorithm'] == 'OPTICSR' :
+                return HttpResponseRedirect('/resultOPTICSR')
+            elif form.cleaned_data['algorithm'] == 'OPTICSP' :
+                return HttpResponseRedirect('/resultOPTICSP')
     else :
         # Trick to avoid None session_key at the first request
         request.session['noise'] = ''
         form = UploadDatasetForm()
     return render(request, 'UploadDatasetTemplate.html', {'form': form})
 
-# Result View Optics
-def ResultViewOPTICS(request) :
+# Result View Optics - R
+def ResultViewOPTICSR(request) :
     # You fool. Go back to the Uploader View. The ds is not set
     if request.session.get('ds', None) == None :
         return HttpResponseRedirect('/')
 
+    # Get element
+    dsId = request.session.get('ds')
+    ds = Dataset.objects.get(id=dsId)
+
+    if request.method == 'GET':
+        # GET - First request prepare the form
+        # Create Form
+        form = ParametersOPTICSR(initial={'minPoints':10, 'eps':3, 'angle':0.5})
+        # Set default parameters
+        minPoints = 10
+        eps = 3
+        angle = 0.5
+    else :
+        # POST - New calculation requested
+        form = ParametersOPTICSR(request.POST)
+
+        if form.is_valid() :
+            minPoints = form.cleaned_data['minPoints']
+            eps = form.cleaned_data['eps']
+            angle = form.cleaned_data['angle']
+
+            functions = form.cleaned_data['noiseFunctions']
+            generateNoise = form.cleaned_data['generateNoise']
+
+            if (functions != '' and generateNoise) :
+                # Generate noise points
+                noise = Noise(functions)
+                noiseStr = noise.generatePoints()
+                ds.noise = noiseStr
+                ds.save()
+            elif (functions == ''):
+                ds.noise = ''
+                ds.save()
+        else :
+            return HttpResponseRedirect('/resultOPTICSR')
+
+    # TODO Run Optics
+
     return render(request, 'ResultTemplateOPTICS.html')
 
-
+# Result View Optics Python
+def ResultViewOPTICSP(request) :
+    return render(request, 'ResultTemplateOPTICS.html')
 
 # Result View STSC
 def ResultViewSTSC(request) :
@@ -81,7 +124,7 @@ def ResultViewSTSC(request) :
                 ds.noise = ''
                 ds.save()
         else :
-            return HttpResponseRedirect('/result')
+            return HttpResponseRedirect('/resultSTSC')
 
     filePath = ds.writeFile() # Write dataset on disk
     stsc = StscRunner(filePath, numClusters, k) # Execution of STSC
