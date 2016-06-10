@@ -19,6 +19,13 @@ tValue = as.double(args[4])
 res <- optics(dataset, eps = epsilon, minPts = minPoints)
 #gives the gradient result
 result <-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts, tValue)
+
+print(result)
+
+
+
+
 #plot(res$reachdist[res$order], type="h", col=result[res$order]+1L,
 #     ylab = "Reachability dist.", xlab = "OPTICS order",	
 #     main = "Reachability Plot")
+
