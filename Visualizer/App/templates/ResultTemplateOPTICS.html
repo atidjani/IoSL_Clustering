@@ -1,5 +1,5 @@
 <head>
-  <title>STSC Result</title>
+  <title>OPTICS - R Result</title>
   {% load staticfiles %}
   <link rel="stylesheet" type="text/css" href="{% static 'runnerOPTICS.css' %}" />
   <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -14,7 +14,7 @@
 
         // Plot reachabilities
         var reachPadding = 30;
-        var yReach = d3.scale.linear()
+        var yReach = d3.scale.pow()
                 .domain([0, d3.max(reachabilities, function(d) { return d; })])
                 .range([height-reachPadding, reachPadding]);
 
@@ -31,7 +31,7 @@
            .append("rect")
            .style("fill", "steelblue")
            .attr("y", function(d) { return yReach(d); })
-           .attr("height", function(d) { return height - reachPadding - yReach(d); })
+           .attr("height", function(d) { return height - reachPadding  - yReach(d); })
            .attr("width", barWidth-1)
            .attr("transform", function(d, i) { return "translate(" + (i * barWidth + reachPadding) + ",0)"; });
 
@@ -101,6 +101,23 @@
     </div>
     <div id="form">
         <p> Parameters: </p>
+        <form action="/resultOPTICSR" method="POST">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          {{ form.minPoints.errors }}
+          <div><label id="minPoints">Min Points:  </label>{{ form.minPoints }}</div>
+          {{ form.eps.errors }}
+          <div><label id="eps">Epsilon:  </label>{{ form.eps }}</div>
+          {{ form.angle.errors }}
+          <div><label id="angle">Angle:  </label>{{ form.angle }}</div>
+          {{ form.noiseFunctions.errors }}
+          <div><label id="noise">Noise Functions:  </label>{{ form.noiseFunctions }}</div>
+          {{ form.generateNoise.errors }}
+          <div><label id="gen">Generate new noise:  </label>{{ form.generateNoise }}</div>
+       <div id="button">
+          <input type="submit" value="Recompute" />
+        </div>
+
    </div>
   </div>
 </body>

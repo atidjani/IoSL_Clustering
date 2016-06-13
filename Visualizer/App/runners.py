@@ -47,15 +47,14 @@ class OpticsRunner():
     __filePath = ""
     __eps = 0.4
     __min_pts = 5
-    __name = 'python'
-    # these path should be relative to the containter -- see up
-    __path_java = '/home/zahin/Dropbox/EIT_ICT/2nd_semester/IOS_Lab/IoSL_Clustering/OPTICS/'
-    __path_r = 'home/zahin/Dropbox/EIT_ICT/2nd_semester/IOS_Lab/IoSL_Clustering/OPTICS/'
+    __angle = -0.5
+    __path_rScript = 'OPTICS/R/optics_gradient_commandline.R'
 
-    def __init__ (self, filePath , eps = 0.4, min_pts = 5):
+    def __init__ (self, filePath , eps = 0.4, min_pts = 5, angle = -0.5):
         self.__filePath = filePath
         self.__eps = eps
         self.__min_pts = min_pts
+        self.__angle = angle
 
     def run_optics_python(self):
          return ''
@@ -63,22 +62,52 @@ class OpticsRunner():
 #        numClusters, points = opt.demo(self.__filePath, str(self.__eps), str(self.__min_pts))
 #        return numClusters, points
 
-    def run_optics_java(self):
-        return ''
-
     def run_optics_r(self):
-        return ''
+        args = ['Rscript', self.__path_rScript, self.__filePath, str(self.__eps), str(self.__min_pts), str(self.__angle)]
+        proc = s.Popen(args, stdout = s.PIPE)
+        tmp = proc.stdout.read().decode('utf-8').split('\n')
+
+        # read clusters
+        clusters = []
+        i = 1
+        while tmp[i] != '=' : # = is the separator between clusters and reachabilities
+            element = tmp[i]
+            element = element.split(',')
+            eList = list(map(float,element[:-1]))
+            eList.append(int(element[-1]))
+            clusters.append(eList)
+            i += 1
+
+        # read reachabilities
+        i += 1
+        reachabilities = []
+        rList = tmp[i].split(',')
+        rList = list(map(float,rList[:-1]))
+
+        # clean inf
+        largest = 0
+        secondLargest = 0
+        for r in rList :
+            if r > largest :
+                secondLargest = largest
+                largest = r
+
+        for index in range(0,len(rList)):
+            if rList[index] == float('Inf'):
+                rList[index] = secondLargest
+
+        numClusters = max(i[2] for i in clusters) + 1
+
+        return  {'reachabilities' : rList, 'clusters': clusters, 'numClusters': numClusters}
 
     def run(self, name):
         points = None
         if 'python' == name.lower():
             numClusters, points = self.run_optics_python()
-        elif 'java' == name.lower():
-            numClusters, points = self.run_optics_java()
         elif 'r' == name.lower():
-            numClusters, = self.run_optics_r()
+            return self.run_optics_r()
 
-        return {'numClusters': numClusters, 'result': points }
+        #return {'numClusters': numClusters, 'result': points }
 
 # path = os.getcwd()
 # obj = OpticsRunner('%s/Datasets/2.txt' %path_proj,0.4,3)

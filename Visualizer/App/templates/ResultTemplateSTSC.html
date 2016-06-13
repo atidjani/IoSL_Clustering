@@ -64,7 +64,7 @@
     </div>
     <div id="form">
         <p> Parameters: </p>
-        <form action="/result" method="POST">
+        <form action="/resultSTSC" method="POST">
           {% csrf_token %}
           {{ form.non_field_errors }}
           {{ form.numClusters.errors }}

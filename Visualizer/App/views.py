@@ -7,7 +7,7 @@ from django.template import RequestContext
 
 from .forms import *
 from .models import Dataset
-from .runners import StscRunner
+from .runners import StscRunner, OpticsRunner
 from .noise import Noise
 
 
@@ -50,11 +50,11 @@ def ResultViewOPTICSR(request) :
     if request.method == 'GET':
         # GET - First request prepare the form
         # Create Form
-        form = ParametersOPTICSR(initial={'minPoints':10, 'eps':3, 'angle':0.5})
+        form = ParametersOPTICSR(initial={'minPoints':15, 'eps':10, 'angle':-0.5})
         # Set default parameters
-        minPoints = 10
-        eps = 3
-        angle = 0.5
+        minPoints = 15
+        eps = 10
+        angle = -0.5
     else :
         # POST - New calculation requested
         form = ParametersOPTICSR(request.POST)
@@ -79,9 +79,15 @@ def ResultViewOPTICSR(request) :
         else :
             return HttpResponseRedirect('/resultOPTICSR')
 
-    # TODO Run Optics
+    filePath = ds.writeFile() # Write dataset on disk
+    optics = OpticsRunner(filePath, eps, minPoints, angle) # Execution of STSC
+    output = optics.run('r')
+    os.remove(filePath) # Delete File
 
-    return render(request, 'ResultTemplateOPTICS.html')
+    # Put the form in the output to display it
+    output['form'] = form
+
+    return render(request, 'ResultTemplateOPTICS.html', output)
 
 # Result View Optics Python
 def ResultViewOPTICSP(request) :

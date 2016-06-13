@@ -3,7 +3,7 @@
 #the Rcpp code only has to be called during the initialisation
 library("dbscan")
 library("stringr")
-Rcpp::sourceCpp('Gradient_Clustering/gradient_clustering.cpp')
+Rcpp::sourceCpp('OPTICS/R/Gradient_Clustering/gradient_clustering.cpp')
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args)!=4) {
@@ -20,17 +20,31 @@ tValue = as.double(args[4])
 ## OPTICS
 res <- optics(dataset, eps = epsilon, minPts = minPoints)
 # Gradient Clustering
-clusters <-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts, tValue)
+gradientClusters <-gradient_clustering(res$order,res$reachdist,res$coredist,res$minPts, tValue)
+
+finalClusters <- vector(length=nrow(dataset))
+i = 0
+for (cluster in gradientClusters) {
+    for (index in cluster) {
+        finalClusters[index] = i
+    }
+    i = i+1
+}
+
+for (i in 1:nrow(dataset)) {
+    cat(dataset$V1[i], dataset$V2[i], finalClusters[i], sep=',')
+    cat('\n')
+}
+
 
 # Prepare clusters list for printing
-clustersList = unlist(lapply(clusters, paste, collapse=" "))
-clustersList <- str_replace_all(clustersList, " " , ",") #Replace spaces with commas
-clustersList <- gsub("^\\s+|\\s+$", "", clustersList)
+# clustersList = unlist(lapply(clusters, paste, collapse=" "))
+# clustersList <- str_replace_all(clustersList, " " , ",") #Replace spaces with commas
+# clustersList <- gsub("^\\s+|\\s+$", "", clustersList)
 
-# Print clusters list
-print(clustersList, quote=FALSE)
+# Print interrupt
+cat("=\n")
 
 # Prepare reachability distances for printing
-cat("[-1] ")
 cat(res$reachdist, sep=",")
 cat("\n")

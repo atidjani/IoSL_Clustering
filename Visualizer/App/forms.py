@@ -32,12 +32,12 @@ class ParametersSTSC(forms.Form):
 
 class ParametersOPTICSP(forms.Form) :
     minPoints = forms.IntegerField(required=True,min_value=1)
-    eps = forms.DecimalField(required=True,min_value=0)
+    eps = forms.DecimalField(required=True,min_value=0, decimal_places=2)
     noiseFunctions = forms.CharField(required=False)
     generateNoise = forms.BooleanField(required=False)
 
     def clean(self):
-        cleaned_data = super(ParametersSTSC, self).clean()
+        cleaned_data = super(ParametersOPTICSP, self).clean()
         fun = cleaned_data.get("noiseFunctions")
 
         if (fun != ''):
@@ -51,13 +51,13 @@ class ParametersOPTICSP(forms.Form) :
 
 class ParametersOPTICSR(forms.Form) :
     minPoints = forms.IntegerField(required=True,min_value=1)
-    eps = forms.DecimalField(required=True,min_value=0)
-    angle = forms.DecimalField(required=True)
+    eps = forms.DecimalField(required=True,min_value=0, decimal_places=2)
+    angle = forms.DecimalField(required=True, min_value=-1, max_value=1, decimal_places=2)
     noiseFunctions = forms.CharField(required=False)
     generateNoise = forms.BooleanField(required=False)
 
     def clean(self):
-        cleaned_data = super(ParametersSTSC, self).clean()
+        cleaned_data = super(ParametersOPTICSR, self).clean()
         fun = cleaned_data.get("noiseFunctions")
 
         if (fun != ''):
