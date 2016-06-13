@@ -38,3 +38,7 @@
 # Build Directories
 build/
 migrations/
+
+#R
+.RData
+.Rhistory

@@ -19,3 +19,8 @@ To plot the result:
 plot(res1$reachdist[res1$order], type="h", col=result[res1$order]+1L,
 ylab = "Reachability dist.", xlab = "OPTICS order",	
 main = "Reachability Plot")
+
+vector <- HelpFunction(result[[6]], 512)
+plot(res1$reachdist[res1$order], type="h", col=vector[res1$order]+1L,
++      ylab = "Reachability dist.", xlab = "OPTICS order",	
++      main = "Reachability Plot")
