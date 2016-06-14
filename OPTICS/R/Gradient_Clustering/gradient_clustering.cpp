@@ -154,6 +154,7 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVecto
 
   //return list of clusters
   //std::cout << setOfClusters.size();
+  //the list with points from the dataset in clusters, so the point in the cluster is the same point in the dataset
   List listOfClusters;
   int cpt = 1;
   for(std::set<std::set<int> >::iterator it = setOfClusters.begin(); it != setOfClusters.end(); ++it){
@@ -164,7 +165,7 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVecto
     listOfClusters.insert(listOfClusters.end(),cluster);
   }
   
-  
+  //the list with points from the dataset are returned in clusters, so the point in the cluster is the same point in the dataset. 
   return listOfClusters;
   //return clusterId;
 }
