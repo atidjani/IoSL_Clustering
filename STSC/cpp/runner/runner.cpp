@@ -110,7 +110,10 @@ int main(int argc, char* argv[]) {
         for (unsigned int j=i+1; j < size; j++) {
             // generate similarity
             double d = euclideanDistance(aInput[i], aInput[j]);
-            double similarity = exp(-(d*d) / (aSigmas[i] * aSigmas[j]));
+            double similarity = 0;
+            if (d<0.03) {
+                similarity = exp(-(d*d) / (aSigmas[i] * aSigmas[j]));
+            }
             m(i,j) = similarity;
             m(j,i) = similarity;
         }

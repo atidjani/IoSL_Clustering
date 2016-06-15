@@ -1,0 +1,130 @@
+<head>
+  <title>OPTICS - R Result</title>
+  {% load staticfiles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'runnerOPTICS.css' %}" />
+  <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  </head>
+<body>
+  <div id="main">
+    <div id="plot">
+      <script>
+        var height = 600;
+        var width = 600;
+        var reachabilities = {{ reachabilities }};
+
+        // Generate random colors
+        var numClusters = {{ numClusters }};
+        var colors = []
+        for (i=0; i<numClusters; i++) {
+          colors.push('#' + (Math.random().toString(16) + "000000").substring(2,8))
+        }
+
+
+        // Plot reachabilities
+        var reachPadding = 30;
+        var yReach = d3.scale.pow()
+                .domain([0, d3.max(reachabilities, function(d) { return d; })])
+                .range([height-reachPadding, reachPadding]);
+
+        var barWidth = (width - reachPadding * 2) / reachabilities.length;
+
+        var reach = d3.select("#plot")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+
+        reach.selectAll("bar")
+           .data(reachabilities)
+           .enter()
+           .append("rect")
+           .attr("y", function(d) { return yReach(d[0]); })
+           .attr("height", function(d) { return height - reachPadding  - yReach(d[0]); })
+           .attr("width", barWidth)
+           .attr("transform", function(d, i) { return "translate(" + (i * barWidth + reachPadding) + ",0)"; })
+           .attr("fill", function(d) { return colors[d[1]]; );
+
+        // Create Y axis
+        reach.append("g")
+           .attr("class", "axis")
+           .attr("transform", "translate(" + (reachPadding-1) + ",0)")
+           .call(d3.svg.axis()
+                   .scale(yReach)
+                   .orient("left"));
+
+
+
+        // Plot clusters
+        var clusterResults = {{ clusters }};
+
+        // Scale the data in input
+		var scalePadding = 30;
+        var xScaleClust = d3.scale.linear()
+                            .domain([d3.min(clusterResults, function(d) { return d[0]; }), d3.max(clusterResults, function(d) { return d[0]; })])
+							.range([scalePadding, width-scalePadding]);
+
+        var yScaleClust = d3.scale.linear()
+                            .domain([d3.min(clusterResults, function(d) { return d[1]; }), d3.max(clusterResults, function(d) { return d[1]; })])
+							.range([height-scalePadding, scalePadding]);
+
+
+        var clust = d3.select("#plot")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+
+        clust.selectAll("circle")
+          .data(clusterResults)
+          .enter()
+          .append("circle")
+          .attr("cx", function(d) { return xScaleClust(d[0]); })
+          .attr("cy", function(d) { return yScaleClust(d[1]); })
+          .attr("r", 2)
+          .attr("fill", function(d) { return colors[d[2]]; });
+
+
+		// Create X axis
+        clust.append("g")
+           .attr("class", "axis")
+           .attr("transform", "translate(0," + (height - scalePadding) + ")")
+           .call(d3.svg.axis()
+                   .scale(xScaleClust)
+                   .orient("bottom"));
+
+		// Create Y axis
+        clust.append("g")
+           .attr("class", "axis")
+           .attr("transform", "translate(" + (xScaleClust(0) > scalePadding ? xScaleClust(0) : scalePadding) + ",0)")
+           .call(d3.svg.axis()
+                   .scale(yScaleClust)
+                   .orient("left"));
+
+        </script>
+    </div>
+    <div id="form">
+        <p> Parameters: </p>
+        <form action="/resultOPTICSR" method="POST">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          {{ form.minPoints.errors }}
+          <div><label id="minPoints">Min Points:  </label>{{ form.minPoints }}</div>
+          {{ form.eps.errors }}
+          <div><label id="eps">Epsilon:  </label>{{ form.eps }}</div>
+          {% if field.angle %}
+            {{ form.angle.errors }}
+            <div><label id="angle">Angle:  </label>{{ form.angle }}</div>
+          {% endif %}
+          {% if field.threshold %}
+            {{ form.threshold.errors }}
+            <div><label id="threshold">Threshold:  </label>{{ form.threshold }}</div>
+          {% endif %}
+          {{ form.noiseFunctions.errors }}
+          <div><label id="noise">Noise Functions:  </label>{{ form.noiseFunctions }}</div>
+          {{ form.generateNoise.errors }}
+          <div><label id="gen">Generate new noise:  </label>{{ form.generateNoise }}</div>
+       <div id="button">
+          <input type="submit" value="Recompute" />
+        </div>
+
+   </div>
+  </div>
+</body>

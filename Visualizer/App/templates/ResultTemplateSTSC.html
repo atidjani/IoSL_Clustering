@@ -1,7 +1,7 @@
 <head>
   <title>STSC Result</title>
   {% load staticfiles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'runner.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'runnerSTSC.css' %}" />
   <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
   </head>
 <body>
@@ -55,7 +55,7 @@
 		// Create Y axis
         svg.append("g")
            .attr("class", "axis")
-		   .attr("transform", "translate(" + xScale(0) + ",0)")
+           .attr("transform", "translate(" + (xScale(0) > scalePadding ? xScale(0) : scalePadding) + ",0)")
            .call(d3.svg.axis()
                    .scale(yScale)
                    .orient("left"));
@@ -64,7 +64,7 @@
     </div>
     <div id="form">
         <p> Parameters: </p>
-        <form action="/result" method="POST">
+        <form action="/resultSTSC" method="POST">
           {% csrf_token %}
           {{ form.non_field_errors }}
           {{ form.numClusters.errors }}
