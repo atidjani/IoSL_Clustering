@@ -2,7 +2,6 @@
 #the RCCP here the path to the Cpp folder
 #the Rcpp code only has to be called during the initialisation
 library("dbscan")
-library("stringr")
 Rcpp::sourceCpp('OPTICS/R/Gradient_Clustering/gradient_clustering.cpp')
 args = commandArgs(trailingOnly=TRUE)
 
@@ -46,5 +45,9 @@ for (i in 1:nrow(dataset)) {
 cat("=\n")
 
 # Prepare reachability distances for printing
-cat(res$reachdist, sep=",")
-cat("\n")
+i = 1;
+for (point in res$order){
+    cat(res$reachdist[i], finalClusters[point], sep=",")
+    cat("\n")
+    i = i+1
+}
