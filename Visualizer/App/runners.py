@@ -70,6 +70,7 @@ class OpticsRunner():
         # read clusters
         clusters = []
         i = 1
+
         while tmp[i] != '=' : # = is the separator between clusters and reachabilities
             element = tmp[i]
             element = element.split(',')
@@ -78,26 +79,20 @@ class OpticsRunner():
             clusters.append(eList)
             i += 1
 
-        # read reachabilities
-        i += 1
-        reachabilities = []
-        rList = tmp[i].split(',')
-        rList = list(map(float,rList[:-1]))
-
-        # clean inf
-        largest = 0
-        secondLargest = 0
-        for r in rList :
-            if r > largest :
-                secondLargest = largest
-                largest = r
-
-        for index in range(0,len(rList)):
-            if rList[index] == float('Inf'):
-                rList[index] = secondLargest
-
         numClusters = max(i[2] for i in clusters) + 1
 
+        # read reachabilities
+        i += 1
+        rList = []
+        while i < len(tmp):
+            element = tmp[i]
+            element = element.split(',')
+            eList = list(map(float,element[0]))
+            eList.append(int(element[1]))
+            rList.append(eList)
+            i += 1
+
+        print rList
         return  {'reachabilities' : rList, 'clusters': clusters, 'numClusters': numClusters}
 
     def run(self, name):
