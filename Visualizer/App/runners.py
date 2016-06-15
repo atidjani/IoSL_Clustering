@@ -17,14 +17,16 @@ class StscRunner :
     __K = 6
     __maxClusters = 0
     __exePath = "STSC/cpp/runner/build/runner"
+    __simCut = 0.3
 
-    def __init__ (self, filePath, maxClusters, K = 6) :
+    def __init__ (self, filePath, maxClusters, K, simCut) :
         self.__filePath = filePath
         self.__K = K
         self.__maxClusters = maxClusters
+        self.__simCut = simCut
 
     def run(self) :
-        args = [self.__exePath, self.__filePath, str(self.__maxClusters), str(self.__K)]
+        args = [self.__exePath, self.__filePath, str(self.__maxClusters), str(self.__K), str(self.__simCut)]
         proc = s.Popen(args, stdout = s.PIPE)
         tmp = proc.stdout.read().decode('utf-8').split('\n')
 
