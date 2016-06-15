@@ -11,62 +11,36 @@ def fullmatch(regex, string):
     """Emulate python-3.4 re.fullmatch()."""
     return re.match("(?:" + regex + r")\Z", string)
 
-class ParametersSTSC(forms.Form):
+class basicForm(forms.Form):
+    noiseFunctions = forms.CharField(required=False)
+    generateNoise = forms.BooleanField(required=False)
+
+    def clean(self):
+        cleaned_data = super(basicForm, self).clean()
+        fun = cleaned_data.get("noiseFunctions")
+
+        if (fun != ''):
+            # Validate function field
+            fun = re.sub('[\s+]', '', fun) #Remove spaces
+            # DON'T FUCK UP WITH THIS LINE.
+            reg = r"(\([x0-9\+\-\*\/\.]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+\))(\;(\([x0-9\+\-\*\/\.]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+\)))*"
+
+            if not fullmatch(reg, fun) :
+                self.add_error("noiseFunctions", "Format not correct")
+
+
+
+class ParametersSTSC(basicForm):
     numClusters = forms.IntegerField(required=True,min_value=1,label='# Clusters')
     k = forms.IntegerField(required=True,min_value=0)
-    noiseFunctions = forms.CharField(required=False)
-    generateNoise = forms.BooleanField(required=False)
 
-    def clean(self):
-        cleaned_data = super(ParametersSTSC, self).clean()
-        fun = cleaned_data.get("noiseFunctions")
-
-        if (fun != ''):
-            # Validate function field
-            fun = re.sub('[\s+]', '', fun) #Remove spaces
-            # DON'T FUCK UP WITH THIS LINE.
-            reg = r"(\([x0-9\+\-\*\/\.]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+\))(\;(\([x0-9\+\-\*\/\.]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+\)))*"
-
-            if not fullmatch(reg, fun) :
-                self.add_error("noiseFunctions", "Format not correct")
-
-class ParametersOPTICSP(forms.Form) :
+class ParametersOPTICSP(basicForm) :
     minPoints = forms.IntegerField(required=True,min_value=1)
     eps = forms.DecimalField(required=True,min_value=0, decimal_places=2)
-    noiseFunctions = forms.CharField(required=False)
-    generateNoise = forms.BooleanField(required=False)
+    threshold = forms.IntegerField(required=True,min_value=1, max_value=100)
 
-    def clean(self):
-        cleaned_data = super(ParametersOPTICSP, self).clean()
-        fun = cleaned_data.get("noiseFunctions")
-
-        if (fun != ''):
-            # Validate function field
-            fun = re.sub('[\s+]', '', fun) #Remove spaces
-            # DON'T FUCK UP WITH THIS LINE.
-            reg = r"(\([x0-9\+\-\*\/\.]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+\))(\;(\([x0-9\+\-\*\/\.]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+\)))*"
-
-            if not fullmatch(reg, fun) :
-                self.add_error("noiseFunctions", "Format not correct")
-
-class ParametersOPTICSR(forms.Form) :
+class ParametersOPTICSR(basicForm) :
     minPoints = forms.IntegerField(required=True,min_value=1)
     eps = forms.DecimalField(required=True,min_value=0, decimal_places=2)
-    angle = forms.DecimalField(required=True, min_value=-1, max_value=1, decimal_places=2)
-    noiseFunctions = forms.CharField(required=False)
-    generateNoise = forms.BooleanField(required=False)
-
-    def clean(self):
-        cleaned_data = super(ParametersOPTICSR, self).clean()
-        fun = cleaned_data.get("noiseFunctions")
-
-        if (fun != ''):
-            # Validate function field
-            fun = re.sub('[\s+]', '', fun) #Remove spaces
-            # DON'T FUCK UP WITH THIS LINE.
-            reg = r"(\([x0-9\+\-\*\/\.]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+\))(\;(\([x0-9\+\-\*\/\.]+,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+(\.[0-9]+)?,[0-9]+\)))*"
-
-            if not fullmatch(reg, fun) :
-                self.add_error("noiseFunctions", "Format not correct")
-
+    angle = forms.IntegerField(required=True,min_value=0, max_value=360)
 
