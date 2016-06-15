@@ -25,6 +25,12 @@ ENV DOCKYARD_SRVHOME=/srv
 # Directory in container for project source files
 ENV DOCKYARD_SRVPROJ=/srv/visualizer
 
+# Install R packages
+RUN wget http://cran.us.r-project.org/src/contrib/Rcpp_0.12.5.tar.gz
+RUN R CMD INSTALL Rcpp_0.12.5.tar.gz
+RUN wget http://cran.us.r-project.org/src/contrib/dbscan_0.9-7.tar.gz
+RUN R CMD INSTALL dbscan_0.9-7.tar.gz
+
 # Copy application source code to SRCDIR
 # Self-tuning spectral clustering
 COPY $DOCKYARD_SRC/STSC/cpp $DOCKYARD_SRVPROJ/STSC/cpp
@@ -39,13 +45,6 @@ RUN make
 WORKDIR $DOCKYARD_SRVPROJ/STSC/cpp/runner/build
 RUN cmake ..
 RUN make
-
-# Install R packages
-WORKDIR $DOCKYARD_SRVPROJ/OPTICS/R
-RUN wget http://cran.us.r-project.org/src/contrib/Rcpp_0.12.5.tar.gz
-RUN R CMD INSTALL Rcpp_0.12.5.tar.gz
-RUN wget http://cran.us.r-project.org/src/contrib/dbscan_0.9-7.tar.gz
-RUN R CMD INSTALL dbscan_0.9-7.tar.gz
 
 # Entrypoint script
 COPY $DOCKYARD_SRC/docker-entrypoint.sh $DOCKYARD_SRVPROJ/docker-entrypoint.sh

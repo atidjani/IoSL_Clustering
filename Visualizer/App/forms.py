@@ -33,6 +33,7 @@ class basicForm(forms.Form):
 class ParametersSTSC(basicForm):
     numClusters = forms.IntegerField(required=True,min_value=1,label='# Clusters')
     k = forms.IntegerField(required=True,min_value=0)
+    simCut = forms.DecimalField(required=True, min_value = 0);
 
 class ParametersOPTICSP(basicForm) :
     minPoints = forms.IntegerField(required=True,min_value=1)

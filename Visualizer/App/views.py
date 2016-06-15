@@ -80,7 +80,7 @@ def ResultViewOPTICSR(request) :
             return HttpResponseRedirect('/resultOPTICSR')
 
     filePath = ds.writeFile() # Write dataset on disk
-    optics = OpticsRunner(filePath, eps, minPoints, angle) # Execution of STSC
+    optics = OpticsRunner(filePath, eps, minPoints, angle) # Execution of OPTICS
     output = optics.run('r')
     os.remove(filePath) # Delete File
 
@@ -132,7 +132,7 @@ def ResultViewOPTICSP(request) :
             return HttpResponseRedirect('/resultOPTICSP')
 
     filePath = ds.writeFile() # Write dataset on disk
-    optics = OpticsRunner(filePath, eps, minPoints, thres = threshold) # Execution of STSC
+    optics = OpticsRunner(filePath, eps, minPoints, thres = threshold) # Execution of OPTICS
     output = optics.run('python')
     os.remove(filePath) # Delete File
 
@@ -154,16 +154,18 @@ def ResultViewSTSC(request) :
     if request.method == 'GET':
         # GET - First request prepare the form
         # Create Form
-        form = ParametersSTSC(initial={'numClusters':10, 'k':7})
+        form = ParametersSTSC(initial={'numClusters':10, 'k':7, 'simCut':1})
         # Set default parameters
         numClusters = 10
         k = 6
+        simCut = 1
     else :
         # POST - New calculation requested
         form = ParametersSTSC(request.POST)
         if form.is_valid() :
             numClusters = form.cleaned_data['numClusters']
             k = form.cleaned_data['k'] - 1
+            simCut = form.cleaned_data['simCut']
 
             functions = form.cleaned_data['noiseFunctions']
             generateNoise = form.cleaned_data['generateNoise']
@@ -181,7 +183,7 @@ def ResultViewSTSC(request) :
             return HttpResponseRedirect('/resultSTSC')
 
     filePath = ds.writeFile() # Write dataset on disk
-    stsc = StscRunner(filePath, numClusters, k) # Execution of STSC
+    stsc = StscRunner(filePath, numClusters, k, simCut) # Execution of STSC
     output = stsc.run()
     os.remove(filePath) # Delete File
 
