@@ -59,9 +59,8 @@ def findLocalMaxima(RPlot, RPoints, nghsize):
 """
 ###############  Algorithm for constructing a cluster tree from a reachability plot  ##############
 """
-def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size):
+def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size, thres):
 
-    print 'node',node
     ##############################  Adjustable parameters ##########################
     reachability_threshold = 0.09
     use_reach_thresh = False
@@ -117,7 +116,7 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     if RPlot[s] < significantMin:
         node.assignSplitPoint(-1)
         #if splitpoint is not significant, ignore this split and continue
-        clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size)
+        clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size, thres)
         return
         
 
@@ -142,7 +141,7 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
         if LocalMax2 < reachability_threshold:
             Nodelist.remove((Node2, LocalMax2))
 
-        clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size)
+        clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size, thres)
         return
 
 
@@ -164,7 +163,7 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
             if float(avgReachValue1 / float(RPlot[s])) >= rejectionRatio and float(avgReachValue2 / float(RPlot[s])) >= rejectionRatio:
                 node.assignSplitPoint(-1)
                 #since splitpoint is not significant, ignore this split and continue (reject both child nodes)
-                clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size)
+                clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size, thres)
                 return
 
 
@@ -217,10 +216,10 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     for nl in Nodelist:
         if bypassNode == 1:
             parentNode.addChild(nl[0])
-            clusterTree(nl[0], parentNode, nl[1], RPlot, RPoints, min_cluster_size)
+            clusterTree(nl[0], parentNode, nl[1], RPlot, RPoints, min_cluster_size, thres)
         else:
             node.addChild(nl[0])
-            clusterTree(nl[0], node, nl[1], RPlot, RPoints, min_cluster_size)
+            clusterTree(nl[0], node, nl[1], RPlot, RPoints, min_cluster_size, thres)
         
 
 def printTree(node, num):
@@ -285,11 +284,10 @@ def graphTree(root, RPlot):
     
         num = 2
         graphNode(root, num, ax)
-    print 'root',root
 
-    # plt.savefig('%s/RPlot.png'%curr_file_path, dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
-    #  transparent=False, bbox_inches=None, pad_inches=0.1)
-    # plt.show()
+        plt.savefig('%s/RPlot.png'%curr_file_path, dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
+         transparent=False, bbox_inches=None, pad_inches=0.1)
+        plt.show()
 
             
 def graphNode(node, num, ax):
@@ -297,7 +295,7 @@ def graphNode(node, num, ax):
     for item in node.children:
         graphNode(item, num - .4, ax)
 
-def automaticCluster(RPlot, RPoints):
+def automaticCluster(RPlot, RPoints, thres):
 
     # For 1000 points point min cluster size would be 5, for less points, it will automatically be set to 5
     # main purpose is the elimination of noisy regions that consists of many insignificant local maxima
@@ -320,8 +318,7 @@ def automaticCluster(RPlot, RPoints):
     localMaximaPoints = findLocalMaxima(RPlot, RPoints, nghsize)
     
     rootNode = TreeNode(RPoints, 0, len(RPoints), None)
-    clusterTree(rootNode, None, localMaximaPoints, RPlot, RPoints, min_cluster_size)
-    print 'rootNode',rootNode
+    clusterTree(rootNode, None, localMaximaPoints, RPlot, RPoints, min_cluster_size, thres)
     return rootNode
     
 

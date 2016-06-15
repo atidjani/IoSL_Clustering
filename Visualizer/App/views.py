@@ -102,7 +102,7 @@ def ResultViewOPTICSP(request) :
     if request.method == 'GET':
         # GET - First request prepare the form
         # Create Form
-        form = ParametersOPTICSP(initial={'minPoints':15, 'eps':10, 'threshold':75})
+        form = ParametersOPTICSP(initial={'minPoints':7, 'eps':0.5, 'threshold':75})
         # Set default parameters
         minPoints = 15
         eps = 10
@@ -194,4 +194,7 @@ def ResultViewSTSC(request) :
 # Show the error page
 def ErrorView(request) :
     return render(request, 'ErrorPage.html', {'error': 'Not supported dataset'})
+
+def HomepageRedirect(request):
+    return HttpResponseRedirect('/')
 

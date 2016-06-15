@@ -23,15 +23,18 @@ if use_plot:
     import matplotlib.pyplot as plt
 
 class Optics():
+    __minpts = 5
+    __eps = 0.5
+    __thres = 0.75
+    __inputfile = ''
 
-    def __init__(self):
-        minpts = 5
-        eps = 0.5
+    def __init__(self, inputfile, eps = 0.4, minpts = 7, thres = 0.75):
+        self.__minpts = minpts
+        self.__eps = eps
+        self.__thres = thres
+        self.__inputfile = inputfile
 
-    def __del__(self):
-        pass
-
-    def demo(self, inputfile, eps, minpts):
+    def demo(self):
         # generat   e some spatial data with varying densities
         # np.random.seed(0)
 
@@ -47,10 +50,10 @@ class Optics():
         # aa=[-5,-2]
         # bb=np.random.randn(n_points_per_cluster, 1)
 
-        k = minpts
+        k = self.__minpts
 
         points_list = list()
-        with open(inputfile, 'rb') as f:
+        with open(self.__inputfile, 'rb') as f:
             try:
                 file_reader = csv.reader(f, delimiter=',')
             except IOError:
@@ -66,28 +69,32 @@ class Optics():
         ## plot scatterplot of points
 
         if use_plot:
-            fig = plt.figure()
-            ax = fig.add_subplot(111)
+            pass
+            # fig = plt.figure()
+            # ax = fig.add_subplot(111)
+            #
+            # ax.plot(X[:,0], X[:,1], 'b.', ms=2)
 
-            ax.plot(X[:,0], X[:,1], 'b.', ms=2)
-
-            plt.savefig('%s/Graph.png'%curr_file_path, dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
-                transparent=False, bbox_inches=None, pad_inches=0.1)
-            plt.show()
+            # plt.savefig('%s/Graph.png'%curr_file_path, dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
+            #     transparent=False, bbox_inches=None, pad_inches=0.1)
+            # plt.show()
 
 
         #run the OPTICS algorithm on the points, using a smoothing value (0 = no smoothing)
         RD, CD, order = OP.optics(X,k,'euclidean') # hcluster uses euclideon function to calculate distance
         RPlot = []
         RPoints = []
+        R_points_ = []
 
         for item in order:
             RPlot.append(RD[item]) #Reachability Plot
-            # print item,RD[item]
+            # R_points.append([RD[item], 0])
             RPoints.append([X[item][0],X[item][1]]) #points in their order determined by OPTICS
+            R_points_.append([X[item][0],X[item][1],RD[item]])
 
+        # print R_points
         #hierarchically cluster the data
-        rootNode = AutoC.automaticCluster(RPlot, RPoints)
+        rootNode = AutoC.automaticCluster(RPlot, RPoints, self.__thres)
 
         #print Tree (DFS)
         AutoC.printTree(rootNode, 0)
@@ -111,19 +118,23 @@ class Optics():
 
         count = 0
         clusters_points = list()
+        R_points = list()
         for item, c in zip(leaves, colors):
             node = []
             for v in range(item.start,item.end):
-                node.append(RPoints[v])
-                clusters_points.append([str(RPoints[v][0]),str(RPoints[v][1]),str(count)])
+                node.append(RPoints[v]); #print RPoints[v]
+                clusters_points.append([RPoints[v][0],RPoints[v][1],count])
+                R_points.append([R_points_[v][2],count])
+
             node = np.array(node)
+
             if use_plot:
                 ax.plot(node[:,0],node[:,1], c+'o', ms=5)  # x and y axis values
             count += 1
-        # print (clusters_points)
 
         if use_plot:
             plt.savefig('%s/Graph2.png'%curr_file_path, dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
                 transparent=False, bbox_inches=None, pad_inches=0.1)
             plt.show()
-        return (count, clusters_points)
+
+        return (count, clusters_points, R_points)

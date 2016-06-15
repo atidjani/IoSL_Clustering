@@ -58,10 +58,9 @@ class OpticsRunner():
         self.__threshold = thres
 
     def run_optics_python(self):
-         # return ''
-       opt = Optics()
-       numClusters, points = opt.demo(self.__filePath, str(self.__eps), str(self.__min_pts), str(self.__threshold))
-       return numClusters, points
+        opt = Optics(self.__filePath, self.__eps, self.__min_pts, self.__threshold)
+        numClusters, clusters, rList = opt.demo()
+        return {'reachabilities' : rList, 'clusters': clusters, 'numClusters': numClusters}
 
     def run_optics_r(self):
         args = ['Rscript', self.__path_rScript, self.__filePath, str(self.__eps), str(self.__min_pts), str(self.__angle)]
@@ -101,13 +100,10 @@ class OpticsRunner():
     def run(self, name):
         points = None
         if 'python' == name.lower():
-            numClusters, points = self.run_optics_python()
-            return {'numClusters': numClusters, 'clusters': points }
+            return self.run_optics_python()
         elif 'r' == name.lower():
             return self.run_optics_r()
 
-
-# path = os.getcwd()
-# obj = OpticsRunner('./Datasets/1.txt',0.4,5)
+# obj = OpticsRunner('./Datasets/2.txt',0.4, 7, 0.75)
 # obj.run('python')
 
