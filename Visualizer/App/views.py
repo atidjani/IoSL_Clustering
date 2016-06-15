@@ -91,7 +91,55 @@ def ResultViewOPTICSR(request) :
 
 # Result View Optics Python
 def ResultViewOPTICSP(request) :
-    return render(request, 'ResultTemplateOPTICS.html')
+    # You fool. Go back to the Uploader View. The ds is not set
+    if request.session.get('ds', None) == None :
+        return HttpResponseRedirect('/')
+
+    # Get element
+    dsId = request.session.get('ds')
+    ds = Dataset.objects.get(id=dsId)
+
+    if request.method == 'GET':
+        # GET - First request prepare the form
+        # Create Form
+        form = ParametersOPTICSR(initial={'minPoints':15, 'eps':10, 'threshold':75})
+        # Set default parameters
+        minPoints = 15
+        eps = 10
+        threshold = 0.75
+    else :
+        # POST - New calculation requested
+        form = ParametersOPTICSR(request.POST)
+
+        if form.is_valid() :
+            minPoints = form.cleaned_data['minPoints']
+            eps = form.cleaned_data['eps']
+            threshold = form.cleaned_data['threshold'] / 100
+
+            functions = form.cleaned_data['noiseFunctions']
+            generateNoise = form.cleaned_data['generateNoise']
+
+            if (functions != '' and generateNoise) :
+                # Generate noise points
+                noise = Noise(functions)
+                noiseStr = noise.generatePoints()
+                ds.noise = noiseStr
+                ds.save()
+            elif (functions == ''):
+                ds.noise = ''
+                ds.save()
+        else :
+            return HttpResponseRedirect('/resultOPTICSP')
+
+    filePath = ds.writeFile() # Write dataset on disk
+    optics = OpticsRunner(filePath, eps, minPoints, thres = threshold) # Execution of STSC
+    output = optics.run('python')
+    os.remove(filePath) # Delete File
+
+    # Put the form in the output to display it
+    output['form'] = form
+
+    return render(request, 'ResultTemplateOPTICS.html', output)
 
 # Result View STSC
 def ResultViewSTSC(request) :
