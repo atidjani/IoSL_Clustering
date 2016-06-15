@@ -12,6 +12,14 @@
         var width = 600;
         var reachabilities = {{ reachabilities }};
 
+        // Generate random colors
+        var numClusters = {{ numClusters }};
+        var colors = []
+        for (i=0; i<numClusters; i++) {
+          colors.push('#' + (Math.random().toString(16) + "000000").substring(2,8))
+        }
+
+
         // Plot reachabilities
         var reachPadding = 30;
         var yReach = d3.scale.pow()
@@ -29,11 +37,11 @@
            .data(reachabilities)
            .enter()
            .append("rect")
-           .style("fill", "steelblue")
-           .attr("y", function(d) { return yReach(d); })
-           .attr("height", function(d) { return height - reachPadding  - yReach(d); })
-           .attr("width", barWidth-1)
-           .attr("transform", function(d, i) { return "translate(" + (i * barWidth + reachPadding) + ",0)"; });
+           .attr("y", function(d) { return yReach(d[0]); })
+           .attr("height", function(d) { return height - reachPadding  - yReach(d[0]); })
+           .attr("width", barWidth)
+           .attr("transform", function(d, i) { return "translate(" + (i * barWidth + reachPadding) + ",0)"; })
+           .attr("fill", function(d) { return colors[d[1]]; );
 
         // Create Y axis
         reach.append("g")
@@ -47,13 +55,6 @@
 
         // Plot clusters
         var clusterResults = {{ clusters }};
-
-        // Generate random colors
-        var numClusters = {{ numClusters }};
-        var colors = []
-        for (i=0; i<numClusters; i++) {
-          colors.push('#' + (Math.random().toString(16) + "000000").substring(2,8))
-        }
 
         // Scale the data in input
 		var scalePadding = 30;
@@ -108,8 +109,14 @@
           <div><label id="minPoints">Min Points:  </label>{{ form.minPoints }}</div>
           {{ form.eps.errors }}
           <div><label id="eps">Epsilon:  </label>{{ form.eps }}</div>
-          {{ form.angle.errors }}
-          <div><label id="angle">Angle:  </label>{{ form.angle }}</div>
+          {% if field.angle %}
+            {{ form.angle.errors }}
+            <div><label id="angle">Angle:  </label>{{ form.angle }}</div>
+          {% endif %}
+          {% if field.threshold %}
+            {{ form.threshold.errors }}
+            <div><label id="threshold">Threshold:  </label>{{ form.threshold }}</div>
+          {% endif %}
           {{ form.noiseFunctions.errors }}
           <div><label id="noise">Noise Functions:  </label>{{ form.noiseFunctions }}</div>
           {{ form.generateNoise.errors }}
