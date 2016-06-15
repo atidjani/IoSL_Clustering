@@ -32,7 +32,7 @@ def UploadDatasetView(request):
     return render(request, 'UploadDatasetTemplate.html', {'form': form})
 
 # Result View
-def ResultView(request) :
+def ResultViewSTSC(request) :
     # You fool. Go back to the Uploader View. The ds is not set
     if request.session.get('ds', None) == None :
         return HttpResponseRedirect('/')
@@ -79,6 +79,9 @@ def ResultView(request) :
     output['form'] = form
 
     return render(request, 'ResultTemplate.html', output)
+
+def ResultViewOptics(request):
+    pass
 
 # Show the error page
 def ErrorView(request) :

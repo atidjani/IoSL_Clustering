@@ -14,6 +14,7 @@ RUN pacman -Sy python2 python2-pip python2-django python2-psycopg2 eigen2 gcc ma
 
 #Install other python libraries
 RUN pip2 install numpy
+RUN pip2 install hcluster
 
 #For production
 # Set env variables used in this Dockerfile (add a unique prefix, such as DOCKYARD)
