@@ -34,7 +34,7 @@ float GD(int y,NumericVector reachdist, IntegerVector co){
 
 std::set<int> BuildCluster(IntegerVector co, int startPnt, int endPnt, NumericVector clusterId, int id){
   std::set<int> cluster;
-  //std::cout << "building cluster from " << startPnt << " to " << endPnt << std::endl; 
+  std::cout << "building cluster from " << startPnt << " to " << endPnt << std::endl; 
   for(int i = startPnt; i <= endPnt; i++){
       cluster.insert(co[i]);
       //if(clusterId[co[i]] == -1)clusterId[co[i]]=id;
@@ -65,7 +65,7 @@ float calculateW(NumericVector dists){
     sum+=dist;
     counter++;
   }
-  return (sum/counter) * 10 ; 
+  return (sum/counter) * 20 ; 
 }
 
 // [[Rcpp::export]]
@@ -90,12 +90,15 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVecto
     i++;
     o = co[i];
     //std::cout << "reach dist of point " << i << "  :  " << reachdist[co[i]-1] << std::endl;
+    //std::cout << "II of point " << i << "  :  " << II(i, reachdist, co) << std::endl;
     //i++;
     
     if(i+1 < co.size()){// i need to check this more thouroughly
       if(II(i, reachdist, co) > t){
         //std::cout << "Inflection point " << i <<std::endl;
-        std::cout << "reach dist of point " << i << "  :  " << reachdist[co[i]-1] << std::endl;
+        // std::cout << "reach dist of point " << i << "  :  " << reachdist[co[i]-1] << std::endl;
+        // std::cout << "II of point " << i << "  :  " << II(i, reachdist, co) << std::endl;
+        // std::cout << "GD of point " << i << "  :  " << GD(i, reachdist, co) << std::endl;
         if(GD(i, reachdist, co) > 0){ 
           
           //std::cout << "CurrentCluster size " << currentCluster.size() << std::endl;
@@ -119,8 +122,8 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVecto
           //setOfClusters.insert("set of objects from startPts.top() to last end point");
           setOfClusters.insert(BuildCluster(co,startPts.top(),i-1,clusterId, id));// last end point would be i-1
           id++;
-
-          if(reachdist[co[i+1]-1] < reachdist[co[i]-1]){ //start point
+         
+          if(reachdist[co[i+1]-1] <= reachdist[co[i]-1]){ //start point: <= instead of < we got better result
             //std::cout << "start point : " <<  i << std::endl ;
             startPts.push(i);
           }
@@ -149,7 +152,7 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVecto
         startPts.pop();
       }
     }
-    i++;
+    //i++;
   }
 
   //return list of clusters
