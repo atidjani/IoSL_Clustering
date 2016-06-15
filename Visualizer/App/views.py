@@ -1,4 +1,4 @@
-import os
+import os, math
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -50,11 +50,11 @@ def ResultViewOPTICSR(request) :
     if request.method == 'GET':
         # GET - First request prepare the form
         # Create Form
-        form = ParametersOPTICSR(initial={'minPoints':15, 'eps':10, 'angle':-0.5})
+        form = ParametersOPTICSR(initial={'minPoints':15, 'eps':10, 'angle':120})
         # Set default parameters
         minPoints = 15
         eps = 10
-        angle = -0.5
+        angle = math.cos(120)
     else :
         # POST - New calculation requested
         form = ParametersOPTICSR(request.POST)
@@ -62,7 +62,7 @@ def ResultViewOPTICSR(request) :
         if form.is_valid() :
             minPoints = form.cleaned_data['minPoints']
             eps = form.cleaned_data['eps']
-            angle = form.cleaned_data['angle']
+            angle = math.cos(form.cleaned_data['angle'])
 
             functions = form.cleaned_data['noiseFunctions']
             generateNoise = form.cleaned_data['generateNoise']
