@@ -80,7 +80,7 @@ def ResultViewOPTICSR(request) :
             return HttpResponseRedirect('/resultOPTICSR')
 
     filePath = ds.writeFile() # Write dataset on disk
-    optics = OpticsRunner(filePath, eps, minPoints, angle) # Execution of STSC
+    optics = OpticsRunner(filePath, eps, minPoints, angle) # Execution of OPTICS
     output = optics.run('r')
     os.remove(filePath) # Delete File
 
@@ -132,7 +132,7 @@ def ResultViewOPTICSP(request) :
             return HttpResponseRedirect('/resultOPTICSP')
 
     filePath = ds.writeFile() # Write dataset on disk
-    optics = OpticsRunner(filePath, eps, minPoints, thres = threshold) # Execution of STSC
+    optics = OpticsRunner(filePath, eps, minPoints, thres = threshold) # Execution of OPTICS
     output = optics.run('python')
     os.remove(filePath) # Delete File
 
