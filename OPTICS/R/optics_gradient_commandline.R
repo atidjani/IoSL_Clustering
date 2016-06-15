@@ -44,9 +44,7 @@ for (i in 1:nrow(dataset)) {
 cat("=\n")
 
 # Prepare reachability distances for printing
-i = 1;
 for (point in res$order){
-    cat(res$reachdist[i], finalClusters[point], sep=",")
+    cat(res$reachdist[point], finalClusters[point], sep=",")
     cat("\n")
-    i = i+1
 }

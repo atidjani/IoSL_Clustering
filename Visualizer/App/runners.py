@@ -66,7 +66,6 @@ class OpticsRunner():
         args = ['Rscript', self.__path_rScript, self.__filePath, str(self.__eps), str(self.__min_pts), str(self.__angle)]
         proc = s.Popen(args, stdout = s.PIPE)
         tmp = proc.stdout.read().decode('utf-8').split('\n')
-
         # read clusters
         clusters = []
         i = 1
@@ -82,17 +81,20 @@ class OpticsRunner():
         numClusters = max(i[2] for i in clusters) + 1
 
         # read reachabilities
+
         i += 1
         rList = []
-        while i < len(tmp):
+        while i < len(tmp)-1:
             element = tmp[i]
             element = element.split(',')
-            eList = list(map(float,element[0]))
+            if element[0] == 'Inf':
+                eList = [0]
+            else :
+                eList = [float(element[0])]
             eList.append(int(element[1]))
             rList.append(eList)
             i += 1
 
-        print rList
         return  {'reachabilities' : rList, 'clusters': clusters, 'numClusters': numClusters}
 
     def run(self, name):

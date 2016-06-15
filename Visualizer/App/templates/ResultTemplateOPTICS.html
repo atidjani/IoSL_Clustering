@@ -23,7 +23,7 @@
         // Plot reachabilities
         var reachPadding = 30;
         var yReach = d3.scale.pow()
-                .domain([0, d3.max(reachabilities, function(d) { return d; })])
+                .domain([0, d3.max(reachabilities, function(d) { return d[0]; })])
                 .range([height-reachPadding, reachPadding]);
 
         var barWidth = (width - reachPadding * 2) / reachabilities.length;
@@ -41,7 +41,7 @@
            .attr("height", function(d) { return height - reachPadding  - yReach(d[0]); })
            .attr("width", barWidth)
            .attr("transform", function(d, i) { return "translate(" + (i * barWidth + reachPadding) + ",0)"; })
-           .attr("fill", function(d) { return colors[d[1]]; );
+           .attr("fill", function(d) { return colors[d[1]];} );
 
         // Create Y axis
         reach.append("g")
@@ -109,11 +109,11 @@
           <div><label id="minPoints">Min Points:  </label>{{ form.minPoints }}</div>
           {{ form.eps.errors }}
           <div><label id="eps">Epsilon:  </label>{{ form.eps }}</div>
-          {% if field.angle %}
+          {% if form.angle %}
             {{ form.angle.errors }}
             <div><label id="angle">Angle:  </label>{{ form.angle }}</div>
           {% endif %}
-          {% if field.threshold %}
+          {% if form.threshold %}
             {{ form.threshold.errors }}
             <div><label id="threshold">Threshold:  </label>{{ form.threshold }}</div>
           {% endif %}
