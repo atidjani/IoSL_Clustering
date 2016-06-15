@@ -74,7 +74,7 @@ def optics(x, k, distMethod = 'euclidean'):
 
             tempInd = D[i].argsort()
             tempD = D[i][tempInd]
-    #       tempD.sort() #we don't use this function as it changes the reference
+            # tempD.sort() #we don't use this function as it changes the reference
             CD[i] = tempD[k]#**2
     except Exception as e:
         print str(e)

@@ -142,6 +142,7 @@ def ResultViewSTSC(request) :
 
     return render(request, 'ResultTemplateSTSC.html', output)
 
+
 # Show the error page
 def ErrorView(request) :
     return render(request, 'ErrorPage.html', {'error': 'Not supported dataset'})
