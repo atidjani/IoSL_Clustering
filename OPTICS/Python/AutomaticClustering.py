@@ -14,12 +14,16 @@ axz@mit.edu
 http://people.csail.mit.edu/axz
 '''
 
+use_plot = False
+if use_plot:
+    import matplotlib.pyplot as plt
 
 import numpy as NP
-import matplotlib.pyplot as plt
-from operator import itemgetter
-import sys
 
+from operator import itemgetter
+import sys,os
+
+curr_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
 def isLocalMaxima(index,RPlot,RPoints,nghsize):
     # 0 = point at index is not local maxima
@@ -52,8 +56,33 @@ def findLocalMaxima(RPlot, RPoints, nghsize):
     return sorted(localMaximaPoints, key=localMaximaPoints.__getitem__ , reverse=True)
     
 
-
+"""
+###############  Algorithm for constructing a cluster tree from a reachability plot  ##############
+"""
 def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size):
+
+    print 'node',node
+    ##############################  Adjustable parameters ##########################
+    reachability_threshold = 0.09
+    use_reach_thresh = False
+
+
+    #the maximum ratio we allow of average height of clusters on the right and left to the local maxima in question
+    maximaRatio = 0.75 #.75 through heuristics any value between 0.7 and 0.8 is good
+
+    #if ratio above exceeds maximaRatio, find which of the clusters to the left and right to reject based on rejectionRatio
+    rejectionRatio = 0.7 #.7
+
+    #set a lower threshold on how small a significant maxima can be
+    significantMin = .003 # .003
+
+    #only check a certain ratio of points in the child nodes formed to the left and right of the maxima
+    checkRatio = .8 # .8
+
+    # A lower value for the similarity threshold means less levels in the tree
+    similaritythreshold = 0.4 # 0.4
+    ################################################################################
+
     #node is a node or the root of the tree in the first call
     #parentNode is parent node of N or None if node is root of the tree
     #localMaximaPoints is list of local maxima points sorted in descending order of reachability
@@ -64,6 +93,7 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     s = localMaximaPoints[0]
     node.assignSplitPoint(s)
     localMaximaPoints = localMaximaPoints[1:]
+
 
     #create two new nodes and add to list of nodes
     Node1 = TreeNode(RPoints[node.start:s],node.start,s, node)
@@ -80,9 +110,9 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     Nodelist = []
     Nodelist.append((Node1,LocalMax1))
     Nodelist.append((Node2,LocalMax2))
-    
-    #set a lower threshold on how small a significant maxima can be
-    significantMin = .003
+    # print Node1,Node2
+
+
 
     if RPlot[s] < significantMin:
         node.assignSplitPoint(-1)
@@ -90,15 +120,30 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
         clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size)
         return
         
-        
+
     #only check a certain ratio of points in the child nodes formed to the left and right of the maxima
-    checkRatio = .8
+    # checkRatio = .8 # .8
     checkValue1 = int(NP.round(checkRatio*len(Node1.points)))
     checkValue2 = int(NP.round(checkRatio*len(Node2.points)))
     if checkValue2 == 0:
         checkValue2 = 1
     avgReachValue1 = float(NP.average(RPlot[(Node1.end - checkValue1):Node1.end]))
     avgReachValue2 = float(NP.average(RPlot[Node2.start:(Node2.start + checkValue2)]))
+
+    # print 'avgReachValue1',avgReachValue1
+    # print 'avgReachValue2',avgReachValue2
+
+    if use_reach_thresh:
+        # if avgReachValue1 < reachability_threshold:
+        if LocalMax1 < reachability_threshold:
+            Nodelist.remove((Node1, LocalMax1))
+
+        # if avgReachValue2 < reachability_threshold:
+        if LocalMax2 < reachability_threshold:
+            Nodelist.remove((Node2, LocalMax2))
+
+        clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size)
+        return
 
 
     '''
@@ -107,26 +152,23 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     local minimums, and the more cuts the resulting tree will have.
     '''
 
-    #the maximum ratio we allow of average height of clusters on the right and left to the local maxima in question
-    maximaRatio = .75
-	
-    #if ratio above exceeds maximaRatio, find which of the clusters to the left and right to reject based on rejectionRatio
-    rejectionRatio = .7
-	
-    if float(avgReachValue1 / float(RPlot[s])) > maximaRatio or float(avgReachValue2 / float(RPlot[s])) > maximaRatio:
+    if not use_reach_thresh:
+        if float(avgReachValue1 / float(RPlot[s])) > maximaRatio or float(avgReachValue2 / float(RPlot[s])) > maximaRatio:
 
-        if float(avgReachValue1 / float(RPlot[s])) < rejectionRatio:
-          #reject node 2
-            Nodelist.remove((Node2, LocalMax2))
-        if float(avgReachValue2 / float(RPlot[s])) < rejectionRatio:
-          #reject node 1
-            Nodelist.remove((Node1, LocalMax1))
-        if float(avgReachValue1 / float(RPlot[s])) >= rejectionRatio and float(avgReachValue2 / float(RPlot[s])) >= rejectionRatio:
-            node.assignSplitPoint(-1)
-            #since splitpoint is not significant, ignore this split and continue (reject both child nodes)
-            clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size)
-            return
- 
+            if float(avgReachValue1 / float(RPlot[s])) < rejectionRatio:
+              #reject node 2
+                Nodelist.remove((Node2, LocalMax2))
+            if float(avgReachValue2 / float(RPlot[s])) < rejectionRatio:
+              #reject node 1
+                Nodelist.remove((Node1, LocalMax1))
+            if float(avgReachValue1 / float(RPlot[s])) >= rejectionRatio and float(avgReachValue2 / float(RPlot[s])) >= rejectionRatio:
+                node.assignSplitPoint(-1)
+                #since splitpoint is not significant, ignore this split and continue (reject both child nodes)
+                clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size)
+                return
+
+
+
     #remove clusters that are too small
     if len(Node1.points) < min_cluster_size:
         #cluster 1 is too small"
@@ -140,11 +182,15 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
             Nodelist.remove((Node2, LocalMax2))
         except Exception:
             sys.exc_clear()
+
+
     if len(Nodelist) == 0:
         #parentNode will be a leaf
         node.assignSplitPoint(-1)
         return
-    
+
+
+
     '''
     Check if nodes can be moved up one level - the new cluster created
     is too "similar" to its parent, given the similarity threshold.
@@ -154,8 +200,10 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     reachability values of the parent node
     A lower value for the similarity threshold means less levels in the tree.
     '''
-    similaritythreshold = 0.4
+    # similaritythreshold = 0.4 # 0.4 A lower value for the similarity threshold means less levels in the tree
     bypassNode = 0
+
+
     if parentNode != None:
         sumRP = NP.average(RPlot[node.start:node.end])
         sumParent = NP.average(RPlot[parentNode.start:parentNode.end])
@@ -163,7 +211,9 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
         #if float(float(sumRP) / float(sumParent)) > similaritythreshold: #2)
             parentNode.children.remove(node)
             bypassNode = 1
-        
+
+
+    # print Nodelist
     for nl in Nodelist:
         if bypassNode == 1:
             parentNode.addChild(nl[0])
@@ -223,19 +273,21 @@ def getLeaves(node, arr):
 
 def graphTree(root, RPlot):
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
+    if use_plot:
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
 
-    a1 = [i for i in range(len(RPlot))]
-    ax.vlines(a1, 0, RPlot)
+        a1 = [i for i in range(len(RPlot))]
+        ax.vlines(a1, 0, RPlot)
 
-    plt.xlabel('Order of points')
-    plt.ylabel('Reachability-distance')
+        plt.xlabel('Order of points')
+        plt.ylabel('Reachability-distance')
     
-    num = 2
-    graphNode(root, num, ax)
+        num = 2
+        graphNode(root, num, ax)
+    print 'root',root
 
-    # plt.savefig('RPlot.png', dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
+    # plt.savefig('%s/RPlot.png'%curr_file_path, dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
     #  transparent=False, bbox_inches=None, pad_inches=0.1)
     # plt.show()
 
@@ -247,12 +299,15 @@ def graphNode(node, num, ax):
 
 def automaticCluster(RPlot, RPoints):
 
-    min_cluster_size_ratio = .005
-    min_neighborhood_size = 2
-    min_maxima_ratio = 0.001
+    # For 1000 points point min cluster size would be 5, for less points, it will automatically be set to 5
+    # main purpose is the elimination of noisy regions that consists of many insignificant local maxima
+    min_cluster_size_ratio = 0.005 #0.005 0.5% compared to the whole dataset
+    min_neighborhood_size = 2 #2
+    min_maxima_ratio = 0.001 #0.001
     
     min_cluster_size = int(min_cluster_size_ratio * len(RPoints))
 
+    # The smallest size of any cluster is 5
     if min_cluster_size < 5:
         min_cluster_size = 5
     
@@ -261,13 +316,12 @@ def automaticCluster(RPlot, RPoints):
 
     if nghsize < min_neighborhood_size:
         nghsize = min_neighborhood_size
-    
+
     localMaximaPoints = findLocalMaxima(RPlot, RPoints, nghsize)
     
     rootNode = TreeNode(RPoints, 0, len(RPoints), None)
     clusterTree(rootNode, None, localMaximaPoints, RPlot, RPoints, min_cluster_size)
-
-
+    print 'rootNode',rootNode
     return rootNode
     
 
