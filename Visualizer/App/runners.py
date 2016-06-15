@@ -91,12 +91,20 @@ class OpticsRunner():
             element = tmp[i]
             element = element.split(',')
             if element[0] == 'Inf':
-                eList = [0]
+                eList = [-1]
             else :
                 eList = [float(element[0])]
             eList.append(int(element[1]))
             rList.append(eList)
             i += 1
+
+        # Substitute the Inf reachabilities (-1) with the max value
+        maxReach = max(i[0] for i in rList) # Find Max
+        # subsitute elements
+        for i in range(0,len(rList)) :
+            if rList[i][0] == -1:
+                rList[i][0] = maxReach
+
 
         return  {'reachabilities' : rList, 'clusters': clusters, 'numClusters': numClusters}
 
