@@ -2,15 +2,14 @@
 #the RCCP here the path to the Cpp folder
 #the Rcpp code only has to be called during the initialisation
 library("dbscan")
-Rcpp::sourceCpp('OPTICS/R/Gradient_Clustering/gradient_clustering.cpp')
+Rcpp::sourceCpp('OPTICS/R/Gradiant\ Clustering/gradient_clustering.cpp')
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args)!=4) {
   stop("missing arguments", call.=FALSE)
 }
 #read the dataset
-dataset <- read.table(file =args[1],
-                      sep=",")
+dataset <- read.table(file =args[1], sep=",")
 #parameters
 epsilon = as.double(args[2])
 minPoints = as.integer(args[3])
