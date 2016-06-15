@@ -1,6 +1,7 @@
 import io
 import hashlib
 import time
+import re
 
 from django.db import models
 from django.utils.translation import ugettext as _
@@ -35,5 +36,8 @@ class Dataset(models.Model):
         filePath = "/tmp/" + hashlib.md5(str(time.time()).encode('utf-8')).hexdigest()
         with open(filePath, "w") as f:
             f.write(self.data)
-            f.write('\n' + self.noise)
+            if self.noise != '' :
+                if re.match('[0-9]', self.data[-1]): #Well played dataset 0, well played.
+                    f.write('\n')
+                f.write(self.noise)
         return filePath

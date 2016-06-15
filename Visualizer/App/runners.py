@@ -17,14 +17,16 @@ class StscRunner :
     __K = 6
     __maxClusters = 0
     __exePath = "STSC/cpp/runner/build/runner"
+    __simCut = 0.3
 
-    def __init__ (self, filePath, maxClusters, K = 6) :
+    def __init__ (self, filePath, maxClusters, K, simCut) :
         self.__filePath = filePath
         self.__K = K
         self.__maxClusters = maxClusters
+        self.__simCut = simCut
 
     def run(self) :
-        args = [self.__exePath, self.__filePath, str(self.__maxClusters), str(self.__K)]
+        args = [self.__exePath, self.__filePath, str(self.__maxClusters), str(self.__K), str(self.__simCut)]
         proc = s.Popen(args, stdout = s.PIPE)
         tmp = proc.stdout.read().decode('utf-8').split('\n')
 
@@ -88,12 +90,20 @@ class OpticsRunner():
             element = tmp[i]
             element = element.split(',')
             if element[0] == 'Inf':
-                eList = [0]
+                eList = [-1]
             else :
                 eList = [float(element[0])]
             eList.append(int(element[1]))
             rList.append(eList)
             i += 1
+
+        # Substitute the Inf reachabilities (-1) with the max value
+        maxReach = max(i[0] for i in rList) # Find Max
+        # subsitute elements
+        for i in range(0,len(rList)) :
+            if rList[i][0] == -1:
+                rList[i][0] = maxReach
+
 
         return  {'reachabilities' : rList, 'clusters': clusters, 'numClusters': numClusters}
 
