@@ -45,12 +45,6 @@ RUN wget http://cran.us.r-project.org/src/contrib/Rcpp_0.12.5.tar.gz
 RUN R CMD INSTALL Rcpp_0.12.5.tar.gz
 RUN wget http://cran.us.r-project.org/src/contrib/dbscan_0.9-7.tar.gz
 RUN R CMD INSTALL dbscan_0.9-7.tar.gz
-RUN wget http://cran.us.r-project.org/src/contrib/stringi_1.1.1.tar.gz
-RUN R CMD INSTALL stringi_1.1.1.tar.gz
-RUN wget http://cran.us.r-project.org/src/contrib/magrittr_1.5.tar.gz
-RUN R CMD INSTALL magrittr_1.5.tar.gz
-RUN wget http://cran.us.r-project.org/src/contrib/stringr_1.0.0.tar.gz
-RUN R CMD INSTALL stringr_1.0.0.tar.gz
 
 # Entrypoint script
 COPY $DOCKYARD_SRC/docker-entrypoint.sh $DOCKYARD_SRVPROJ/docker-entrypoint.sh
