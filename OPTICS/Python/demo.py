@@ -12,12 +12,15 @@ https://github.com/amyxzhang/OPTICS-Automatic-Clustering
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 import OpticsClusterArea as OP
 from itertools import *
 import AutomaticClustering as AutoC
 import sys,os,csv
+curr_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
+use_plot = False
+if use_plot:
+    import matplotlib.pyplot as plt
 
 class Optics():
 
@@ -62,25 +65,25 @@ class Optics():
 
         ## plot scatterplot of points
 
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
+        if use_plot:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
 
-        ax.plot(X[:,0], X[:,1], 'b.', ms=2)
+            ax.plot(X[:,0], X[:,1], 'b.', ms=2)
 
-        # plt.savefig('./Graph.png', dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
-        #     transparent=False, bbox_inches=None, pad_inches=0.1)
-        # plt.show()
-
+            plt.savefig('%s/Graph.png'%curr_file_path, dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
+                transparent=False, bbox_inches=None, pad_inches=0.1)
+            plt.show()
 
 
         #run the OPTICS algorithm on the points, using a smoothing value (0 = no smoothing)
-        RD, CD, order = OP.optics(X,k)
-
+        RD, CD, order = OP.optics(X,k,'euclidean') # hcluster uses euclideon function to calculate distance
         RPlot = []
         RPoints = []
 
         for item in order:
             RPlot.append(RD[item]) #Reachability Plot
+            # print item,RD[item]
             RPoints.append([X[item][0],X[item][1]]) #points in their order determined by OPTICS
 
         #hierarchically cluster the data
@@ -98,11 +101,12 @@ class Optics():
         #get only the leaves of the tree
         leaves = AutoC.getLeaves(rootNode, [])
 
-        #graph the points and the leaf clusters that have been found by OPTICS
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
+        if use_plot:
+            #graph the points and the leaf clusters that have been found by OPTICS
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
 
-        ax.plot(X[:,0], X[:,1], 'y.')
+            ax.plot(X[:,0], X[:,1], 'y.')
         colors = cycle('gmkrcbgrcmk')
 
         count = 0
@@ -111,12 +115,15 @@ class Optics():
             node = []
             for v in range(item.start,item.end):
                 node.append(RPoints[v])
-                clusters_points.append(str(count) + ' ' + str(RPoints[v][0]) + ' ' + str(RPoints[v][1]))
+                clusters_points.append([str(RPoints[v][0]),str(RPoints[v][1]),str(count)])
             node = np.array(node)
-            ax.plot(node[:,0],node[:,1], c+'o', ms=5)  # x and y axis values
+            if use_plot:
+                ax.plot(node[:,0],node[:,1], c+'o', ms=5)  # x and y axis values
             count += 1
-        return count, clusters_points
+        # print (clusters_points)
 
-        # plt.savefig('Graph2.png', dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
-        #     transparent=False, bbox_inches=None, pad_inches=0.1)
-        # plt.show()
+        if use_plot:
+            plt.savefig('%s/Graph2.png'%curr_file_path, dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
+                transparent=False, bbox_inches=None, pad_inches=0.1)
+            plt.show()
+        return (count, clusters_points)
