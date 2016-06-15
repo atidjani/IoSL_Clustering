@@ -102,7 +102,7 @@ def ResultViewOPTICSP(request) :
     if request.method == 'GET':
         # GET - First request prepare the form
         # Create Form
-        form = ParametersOPTICSR(initial={'minPoints':15, 'eps':10, 'threshold':75})
+        form = ParametersOPTICSP(initial={'minPoints':15, 'eps':10, 'threshold':75})
         # Set default parameters
         minPoints = 15
         eps = 10

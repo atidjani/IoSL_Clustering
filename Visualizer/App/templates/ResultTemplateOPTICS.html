@@ -103,7 +103,11 @@
     <div id="form">
         <p> # Clusters: {{ numClusters }} </p>
         <p> Parameters: </p>
+        {% if form.angle %}
         <form action="/resultOPTICSR" method="POST">
+        {% else %}
+        <form action="/resultOPTICSP" method="POST">
+        {% endif %}
           {% csrf_token %}
           {{ form.non_field_errors }}
           {{ form.minPoints.errors }}
@@ -113,8 +117,7 @@
           {% if form.angle %}
             {{ form.angle.errors }}
             <div><label id="angle">Angle:  </label>{{ form.angle }}</div>
-          {% endif %}
-          {% if form.threshold %}
+          {% else %}
             {{ form.threshold.errors }}
             <div><label id="threshold">Threshold:  </label>{{ form.threshold }}</div>
           {% endif %}
