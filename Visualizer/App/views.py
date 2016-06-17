@@ -104,8 +104,8 @@ def ResultViewOPTICSP(request) :
         # Create Form
         form = ParametersOPTICSP(initial={'minPoints':7, 'eps':0.5, 'threshold':75})
         # Set default parameters
-        minPoints = 15
-        eps = 10
+        minPoints = 7
+        eps = 0.5
         threshold = 0.75
     else :
         # POST - New calculation requested
@@ -114,7 +114,7 @@ def ResultViewOPTICSP(request) :
         if form.is_valid() :
             minPoints = form.cleaned_data['minPoints']
             eps = form.cleaned_data['eps']
-            threshold = form.cleaned_data['threshold'] / 100
+            threshold = float(form.cleaned_data['threshold']) / 100
 
             functions = form.cleaned_data['noiseFunctions']
             generateNoise = form.cleaned_data['generateNoise']
@@ -199,4 +199,3 @@ def ErrorView(request) :
 
 def HomepageRedirect(request):
     return HttpResponseRedirect('/')
-

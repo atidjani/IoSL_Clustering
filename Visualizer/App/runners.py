@@ -50,17 +50,18 @@ class OpticsRunner():
     __eps = 0.4
     __min_pts = 5
     __angle = -0.5
+    __thres = 0.75
     __path_rScript = 'OPTICS/R/optics_gradient_commandline.R'
 
-    def __init__ (self, filePath , eps = 0.4, min_pts = 5, angle = -0.5, thres = 0.75):
+    def __init__ (self, filePath , eps = 0.4, min_pts = 5, angle = 120, thres = 0.75):
         self.__filePath = filePath
         self.__eps = eps
         self.__min_pts = min_pts
         self.__angle = angle
-        self.__threshold = thres
+        self.__thres = thres
 
     def run_optics_python(self):
-        opt = Optics(self.__filePath, self.__eps, self.__min_pts, self.__threshold)
+        opt = Optics(self.__filePath, self.__eps, self.__min_pts, self.__thres)
         numClusters, clusters, rList = opt.demo()
         return {'reachabilities' : rList, 'clusters': clusters, 'numClusters': numClusters}
 
@@ -114,6 +115,6 @@ class OpticsRunner():
         elif 'r' == name.lower():
             return self.run_optics_r()
 
-# obj = OpticsRunner('./Datasets/2.txt',0.4, 7, 0.75)
+# obj = OpticsRunner('./Datasets/2.txt',0.4, 7, 0.84)
 # obj.run('python')
 

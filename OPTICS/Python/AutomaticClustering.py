@@ -61,9 +61,8 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     reachability_threshold = 0.09
     use_reach_thresh = False
 
-
     #the maximum ratio we allow of average height of clusters on the right and left to the local maxima in question
-    maximaRatio = 0.75 #.75 through heuristics any value between 0.7 and 0.8 is good
+    maximaRatio = thres #.75 through heuristics any value between 0.7 and 0.8 is good
 
     #if ratio above exceeds maximaRatio, find which of the clusters to the left and right to reject based on rejectionRatio
     rejectionRatio = 0.7 #.7
