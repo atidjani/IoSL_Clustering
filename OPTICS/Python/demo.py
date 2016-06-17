@@ -99,8 +99,9 @@ class Optics():
         #print Tree (DFS)
         AutoC.printTree(rootNode, 0)
 
-        #graph reachability plot and tree
-        AutoC.graphTree(rootNode, RPlot)
+        if use_plot:
+            #graph reachability plot and tree
+            AutoC.graphTree(rootNode, RPlot)
 
         #array of the TreeNode objects, position in the array is the TreeNode's level in the tree
         array = AutoC.getArray(rootNode, 0, [0])

@@ -14,10 +14,6 @@ axz@mit.edu
 http://people.csail.mit.edu/axz
 '''
 
-use_plot = False
-if use_plot:
-    import matplotlib.pyplot as plt
-
 import numpy as NP
 
 from operator import itemgetter
@@ -271,23 +267,22 @@ def getLeaves(node, arr):
 
 
 def graphTree(root, RPlot):
+    import matplotlib.pyplot as plt
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
 
-    if use_plot:
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
+    a1 = [i for i in range(len(RPlot))]
+    ax.vlines(a1, 0, RPlot)
 
-        a1 = [i for i in range(len(RPlot))]
-        ax.vlines(a1, 0, RPlot)
+    plt.xlabel('Order of points')
+    plt.ylabel('Reachability-distance')
 
-        plt.xlabel('Order of points')
-        plt.ylabel('Reachability-distance')
-    
-        num = 2
-        graphNode(root, num, ax)
+    num = 2
+    graphNode(root, num, ax)
 
-        plt.savefig('%s/RPlot.png'%curr_file_path, dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
-         transparent=False, bbox_inches=None, pad_inches=0.1)
-        plt.show()
+    plt.savefig('%s/RPlot.png'%curr_file_path, dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None,
+     transparent=False, bbox_inches=None, pad_inches=0.1)
+    plt.show()
 
             
 def graphNode(node, num, ax):
