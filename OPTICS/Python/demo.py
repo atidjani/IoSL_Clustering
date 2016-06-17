@@ -18,7 +18,7 @@ import AutomaticClustering as AutoC
 import sys,os,csv
 curr_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
-use_plot = True
+use_plot = False
 if use_plot:
     import matplotlib.pyplot as plt
 
