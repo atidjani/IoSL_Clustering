@@ -85,3 +85,14 @@ form div {
   text-align: right;
 }
 
+#points {
+  height: 500px;
+  overflow: scroll;
+  border: 2px solid #DC143C;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+#points p {
+  font-size: 12px;
+}

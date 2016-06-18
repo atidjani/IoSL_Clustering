@@ -87,6 +87,9 @@ def ResultViewOPTICSR(request) :
     # Put the form in the output to display it
     output['form'] = form
 
+    # Get the points from the db to be displayed
+    output['points'] = ds.getPoints()
+
     return render(request, 'ResultTemplateOPTICS.html', output)
 
 # Result View Optics Python
@@ -139,6 +142,9 @@ def ResultViewOPTICSP(request) :
     # Put the form in the output to display it
     output['form'] = form
 
+    # Get the points from the db to be displayed
+    output['points'] = ds.getPoints()
+
     return render(request, 'ResultTemplateOPTICS.html', output)
 
 # Result View STSC
@@ -189,6 +195,9 @@ def ResultViewSTSC(request) :
 
     # Put the form in the output to display it
     output['form'] = form
+
+    # Get the points from the db to be displayed
+    output['points'] = ds.getPoints()
 
     return render(request, 'ResultTemplateSTSC.html', output)
 

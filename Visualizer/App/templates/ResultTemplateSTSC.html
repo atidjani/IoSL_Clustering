@@ -78,10 +78,13 @@
           <div><label id="noise">Noise Functions:  </label>{{ form.noiseFunctions }}</div>
           {{ form.generateNoise.errors }}
           <div><label id="gen">Generate new noise:  </label>{{ form.generateNoise }}</div>
-       <div id="button">
-          <input type="submit" value="Recompute" />
-        </div>
-    </form>
+          <div id="button">
+            <input type="submit" value="Recompute" />
+          </div>
+       </form>
+       <div id="points">
+           {{ points|linebreaks }}
+       </div>
     </div>
   </div>
 </body>
