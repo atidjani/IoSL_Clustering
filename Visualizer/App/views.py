@@ -1,15 +1,22 @@
-import os, math
+import os, math, time
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ValidationError
 from django.template import RequestContext
 
+from time import strftime, gmtime
+
 from .forms import *
 from .models import Dataset
 from .runners import StscRunner, OpticsRunner
 from .noise import Noise
 
+# Auxiliary function to delete old entries from the database
+# Executed each time a page is requested
+def deleteOldEntries() :
+    until = int(time.time()) - 6*60*60 # 6h * 60m *60s
+    Dataset.objects.filter(creationTime__lt = strftime('%Y-%m-%d %H:%M:%S', gmtime(until))).delete()
 
 # Uploader view
 def UploadDatasetView(request):
@@ -90,6 +97,7 @@ def ResultViewOPTICSR(request) :
     # Get the points from the db to be displayed
     output['points'] = ds.getPoints()
 
+    deleteOldEntries()
     return render(request, 'ResultTemplateOPTICS.html', output)
 
 # Result View Optics Python
@@ -145,6 +153,7 @@ def ResultViewOPTICSP(request) :
     # Get the points from the db to be displayed
     output['points'] = ds.getPoints()
 
+    deleteOldEntries()
     return render(request, 'ResultTemplateOPTICS.html', output)
 
 # Result View STSC
@@ -199,6 +208,7 @@ def ResultViewSTSC(request) :
     # Get the points from the db to be displayed
     output['points'] = ds.getPoints()
 
+    deleteOldEntries()
     return render(request, 'ResultTemplateSTSC.html', output)
 
 
