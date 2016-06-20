@@ -120,7 +120,7 @@ def ResultViewOPTICSP(request) :
         threshold = 0.75
     else :
         # POST - New calculation requested
-        form = ParametersOPTICSR(request.POST)
+        form = ParametersOPTICSP(request.POST)
 
         if form.is_valid() :
             minPoints = form.cleaned_data['minPoints']
