@@ -115,6 +115,5 @@ class OpticsRunner():
         elif 'r' == name.lower():
             return self.run_optics_r()
 
-# obj = OpticsRunner('./Datasets/2.txt',0.4, 7, 0.84)
+# obj = OpticsRunner('./Datasets/2.txt',0.4, 7, 0.75)
 # obj.run('python')
-

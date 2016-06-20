@@ -267,10 +267,12 @@ def getLeaves(node, arr):
 
 def graphTree(root, RPlot):
     import matplotlib.pyplot as plt
+
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
     a1 = [i for i in range(len(RPlot))]
+
     ax.vlines(a1, 0, RPlot)
 
     plt.xlabel('Order of points')
