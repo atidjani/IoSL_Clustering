@@ -32,6 +32,14 @@ class Dataset(models.Model):
                    raise ValidationError(_('Format not compatible'))
         return True
 
+    def getPoints(self) :
+        res = self.data
+        if self.noise != '' :
+            if re.match('[0-9]', self.data[-1]): #Well played dataset 0, well played.
+                res += '\n'
+            res += self.noise
+        return res
+
     def writeFile(self) :
         filePath = "/tmp/" + hashlib.md5(str(time.time()).encode('utf-8')).hexdigest()
         with open(filePath, "w") as f:

@@ -51,6 +51,33 @@ form div {
   font-size: 25px;
 }
 
+#minPoints {
+  margin-right: 268px;
+}
+
+#eps {
+  margin-right: 287px;
+}
+
+#angle {
+  margin-right: 298px;
+}
+
+#threshold {
+  margin-right: 271px;
+}
+
+#noise {
+  margin-right: 10px;
+}
+
+#id_noiseFunctions {
+  width: 385px;
+}
+
+#gen {
+  margin-right: 349px;
+}
 
 #button {
   margin-bottom: 0px;
@@ -58,3 +85,14 @@ form div {
   text-align: right;
 }
 
+#points {
+  height: 500px;
+  overflow: scroll;
+  border: 2px solid #DC143C;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+#points p {
+  font-size: 12px;
+}
