@@ -169,11 +169,11 @@ def ResultViewSTSC(request) :
     if request.method == 'GET':
         # GET - First request prepare the form
         # Create Form
-        form = ParametersSTSC(initial={'numClusters':10, 'k':7, 'simCut':1})
+        form = ParametersSTSC(initial={'numClusters':10, 'k':7, 'simCut':5})
         # Set default parameters
         numClusters = 10
         k = 6
-        simCut = 1
+        simCut = 5
     else :
         # POST - New calculation requested
         form = ParametersSTSC(request.POST)
