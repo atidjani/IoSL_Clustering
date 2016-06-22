@@ -63,7 +63,7 @@ class OpticsRunner():
     def run_optics_python(self):
         opt = Optics(self.__filePath, self.__eps, self.__min_pts, self.__thres)
         numClusters, clusters, rList = opt.demo()
-        return {'reachabilities' : rList, 'clusters': clusters, 'numClusters': numClusters}
+        return {'reachabilities' : rList, 'clusters': clusters, 'numClusters': numClusters-1}
 
     def run_optics_r(self):
         args = ['Rscript', self.__path_rScript, self.__filePath, str(self.__eps), str(self.__min_pts), str(self.__angle)]
