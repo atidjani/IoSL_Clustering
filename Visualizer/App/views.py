@@ -61,7 +61,7 @@ def ResultViewOPTICSR(request) :
         # Set default parameters
         minPoints = 15
         eps = 10
-        angle = math.cos(120)
+        angle = math.cos(math.radians(120))
     else :
         # POST - New calculation requested
         form = ParametersOPTICSR(request.POST)
@@ -69,7 +69,7 @@ def ResultViewOPTICSR(request) :
         if form.is_valid() :
             minPoints = form.cleaned_data['minPoints']
             eps = form.cleaned_data['eps']
-            angle = math.cos(form.cleaned_data['angle'])
+            angle = math.cos(math.radians(form.cleaned_data['angle']))
 
             functions = form.cleaned_data['noiseFunctions']
             generateNoise = form.cleaned_data['generateNoise']
