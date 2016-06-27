@@ -10,9 +10,10 @@
 #include <map>
 #include <Eigen/Array>
 
-ClusterRotate::ClusterRotate(int method):
+ClusterRotate::ClusterRotate(int method, double stopCriteria):
 	mMethod(method),
-	mMaxQuality(0)
+	mMaxQuality(0),
+    mStopCriteria(stopCriteria)
 {
 
 }
@@ -32,7 +33,7 @@ std::vector<std::vector<int> > ClusterRotate::cluster(Eigen::MatrixXd& X) {
 			delete e;
 		}
 		//perform the rotation for the current number of dimensions
-		e = new Evrot(vecIn, mMethod);
+		e = new Evrot(vecIn, mMethod, mStopCriteria);
 
 		//save max quality
 		if (e->getQuality() > mMaxQuality) {

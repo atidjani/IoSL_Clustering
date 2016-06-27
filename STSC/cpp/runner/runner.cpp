@@ -82,8 +82,8 @@ double sigma(std::vector<std::vector<double>> rDataset, int nPIndex, int K) {
 
 int main(int argc, char* argv[]) {
 
-    if (argc != 5) {
-        std::cout << "Usage: ./runner [Dataset] [# Exp. Clusters] [K Value] [Similarity Cut]" << std::endl;
+    if (argc != 6) {
+        std::cout << "Usage: ./runner [Dataset] [# Exp. Clusters] [K Value] [Similarity Cut] [Stop Criteria]" << std::endl;
         return -1;
     }
 
@@ -93,7 +93,8 @@ int main(int argc, char* argv[]) {
     */
 
     int K = std::stoi(argv[3]);
-    int simCut = std::stod(argv[4]);
+    double simCut = std::stod(argv[4]);
+    double stopCriteria = std::stod(argv[5]);
     std::vector<std::vector<double> > aInput = readData(argv[1]);
 
     // generate similarity matrix
@@ -123,7 +124,7 @@ int main(int argc, char* argv[]) {
     int numDims = std::stoi(argv[2]);
 
     // do eigenvalue decomposition
-    SpectralClustering c(m, numDims);
+    SpectralClustering c(m, numDims, stopCriteria);
 
     std::vector<std::vector<int> > clusters;
     // auto-tuning clustering

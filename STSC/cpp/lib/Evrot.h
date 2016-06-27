@@ -26,7 +26,7 @@
 class Evrot {
 
 public:
-	Evrot(Eigen::MatrixXd& X, int method);
+	Evrot(Eigen::MatrixXd& X, int method, double stopCriteria);
 	virtual ~Evrot();
 	double getQuality() { return mQuality; }
 	std::vector<std::vector<int> > getClusters() { return mClusters; }
@@ -54,6 +54,7 @@ protected:
 	Eigen::MatrixXd& mX;
 	Eigen::MatrixXd mXrot;
 	double mQuality;
+    double mStopCriteria;
 
 	std::vector<std::vector<int> > mClusters;
 };

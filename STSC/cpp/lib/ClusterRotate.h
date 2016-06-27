@@ -16,7 +16,7 @@
 class ClusterRotate {
 
 public:
-	ClusterRotate(int method = 1);
+	ClusterRotate(int method, double stopCriteria );
 	virtual ~ClusterRotate() { }
 
 	std::vector<std::vector<int> > cluster(Eigen::MatrixXd& X);
@@ -26,6 +26,7 @@ protected:
 
 	int mMethod;
 	double mMaxQuality;
+    double mStopCriteria;
 
 };
 
