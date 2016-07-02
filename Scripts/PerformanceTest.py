@@ -3,7 +3,7 @@ import sys, time, os
 
 from sklearn.datasets.samples_generator import make_blobs
 
-sizes = [250, 500, 1000, 2500, 5000, 10000, 15000]
+sizes = [250, 500, 1000, 2000, 4000, 5000 ]
 exeTimes = []
 
 exePath = "../STSC/cpp/runner/build/runner"
