@@ -6,12 +6,12 @@ from sklearn.datasets.samples_generator import make_blobs
 sizes = [250, 500, 1000, 2000, 4000, 5000 ]
 exeTimes = []
 
-exePath = "../STSC/cpp/runner/build/runner"
+exePath = '../OPTICS/R/optics_gradient_commandline.R'
 filePath = "ds.txt"
-K = 6
-maxClusters = 10
-simCut = 5
-stop = 0.001
+eps = 10
+min_pts = 15
+angle = -0.5
+
 
 
 for size in sizes :
@@ -22,7 +22,7 @@ for size in sizes :
         f.write((str(a[0]) +','+ str(a[1]) + '\n').encode('utf-8'))
 
     sizeTime = []
-    args = [exePath, filePath, str(maxClusters), str(K), str(simCut), str(stop)]
+    args = ['Rscript', exePath, filePath, str(eps), str(min_pts), str(angle)]
 
     for i in range(0, 3):
        print i
