@@ -3,13 +3,13 @@ import sys, time, os
 
 from sklearn.datasets.samples_generator import make_blobs
 
-sizes = [250, 500, 1000, 1500, 2000, 3000]
+sizes = [250, 500, 1000, 1500, 2001, 3000]
+maxNumClusters = [10, 25, 50]
 exeTimes = []
 
 exePath = "../STSC/cpp/runner/build/runner"
 filePath = "ds.txt"
 K = 6
-maxClusters = 10
 simCut = 1
 stop = 0.001
 
@@ -22,18 +22,17 @@ for size in sizes :
         f.write((str(a[0]) +','+ str(a[1]) + '\n').encode('utf-8'))
 
     sizeTime = []
-    args = [exePath, filePath, str(maxClusters), str(K), str(simCut), str(stop)]
-
-    for i in range(0, 3):
-       print i
-       start = time.clock()
-       proc = s.Popen(args, stdout = s.PIPE)
-       proc.wait()
-       stop = time.clock()
-       sizeTime.append(stop-start)
-
-    exeTimes.append(sizeTime)
-    os.remove(filePath)
+    for maxClust in maxNumClusters:
+	args = [exePath, filePath, str(maxClust), str(K), str(simCut), str(stop)]
+	for i in range(0, 3):
+	   print i
+	   start = time.time()
+	   proc = s.Popen(args, stdout=s.PIPE)
+	   proc.wait()
+	   stop = time.time()
+	   sizeTime.append(stop-start)
+        exeTimes.append(sizeTime)
+     os.remove(filePath)
 
 with open('result.txt', 'wb')  as f :
     for sizeRun in exeTimes :
