@@ -22,7 +22,7 @@ for size in sizes :
         f.write((str(a[0]) +','+ str(a[1]) + '\n').encode('utf-8'))
 
     sizeTime = []
-    args = ['Rscript', exePath, filePath, str(eps), str(min_pts), str(angle)]
+    args = [exePath, filePath, str(maxClusters), str(K), str(simCut), str(stop)]
 
     for i in range(0, 3):
        print i
