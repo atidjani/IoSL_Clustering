@@ -32,7 +32,7 @@ for size in sizes :
 	   stop = time.time()
 	   sizeTime.append(stop-start)
         exeTimes.append(sizeTime)
-     os.remove(filePath)
+    os.remove(filePath)
 
 with open('result.txt', 'wb')  as f :
     for sizeRun in exeTimes :
