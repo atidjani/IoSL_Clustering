@@ -61,7 +61,7 @@ def ResultViewOPTICSR(request) :
         # Set default parameters
         minPoints = 15
         eps = 10
-        angle = math.cos(120)
+        angle = math.cos(math.radians(120))
     else :
         # POST - New calculation requested
         form = ParametersOPTICSR(request.POST)
@@ -69,7 +69,7 @@ def ResultViewOPTICSR(request) :
         if form.is_valid() :
             minPoints = form.cleaned_data['minPoints']
             eps = form.cleaned_data['eps']
-            angle = math.cos(form.cleaned_data['angle'])
+            angle = math.cos(math.radians(form.cleaned_data['angle']))
 
             functions = form.cleaned_data['noiseFunctions']
             generateNoise = form.cleaned_data['generateNoise']
@@ -169,11 +169,12 @@ def ResultViewSTSC(request) :
     if request.method == 'GET':
         # GET - First request prepare the form
         # Create Form
-        form = ParametersSTSC(initial={'numClusters':10, 'k':7, 'simCut':5})
+        form = ParametersSTSC(initial={'numClusters':10, 'k':7, 'simCut':5, 'stop':0.001})
         # Set default parameters
         numClusters = 10
         k = 6
         simCut = 5
+        stop = 0.001
     else :
         # POST - New calculation requested
         form = ParametersSTSC(request.POST)
@@ -181,6 +182,7 @@ def ResultViewSTSC(request) :
             numClusters = form.cleaned_data['numClusters']
             k = form.cleaned_data['k'] - 1
             simCut = form.cleaned_data['simCut']
+            stop = form.cleaned_data['stop']
 
             functions = form.cleaned_data['noiseFunctions']
             generateNoise = form.cleaned_data['generateNoise']
@@ -197,8 +199,9 @@ def ResultViewSTSC(request) :
         else :
             return HttpResponseRedirect('/resultSTSC')
 
+    print "Stop" + str(stop)
     filePath = ds.writeFile() # Write dataset on disk
-    stsc = StscRunner(filePath, numClusters, k, simCut) # Execution of STSC
+    stsc = StscRunner(filePath, numClusters, k, simCut, stop) # Execution of STSC
     output = stsc.run()
     os.remove(filePath) # Delete File
 

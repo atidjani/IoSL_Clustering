@@ -9,7 +9,7 @@
 
 #include <map>
 
-Evrot::Evrot(Eigen::MatrixXd& X, int method):
+Evrot::Evrot(Eigen::MatrixXd& X, int method, double stopCriteria):
 	mMethod(method),
 	mNumDims(X.cols()),
 	mNumData(X.rows()),
@@ -17,7 +17,8 @@ Evrot::Evrot(Eigen::MatrixXd& X, int method):
 	ik(Eigen::VectorXi(mNumAngles)),
 	jk(Eigen::VectorXi(mNumAngles)),
 	mX(X),
-	mClusters(std::vector<std::vector<int> >(mNumDims)) //allocate clusters vector
+	mClusters(std::vector<std::vector<int> >(mNumDims)), //allocate clusters vector
+    mStopCriteria(stopCriteria)
 {
 	// build index mapping (to index upper triangle)
 	int k = 0;
@@ -104,7 +105,7 @@ void Evrot::evrot() {
 		}
 		// stopping criteria
 		if( iter > 2 ){
-			if( Q - Q_old2 < 1e-3 ){
+			if( Q - Q_old2 < mStopCriteria ){
 				break;
 			}
 		}

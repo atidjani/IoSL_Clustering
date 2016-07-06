@@ -22,7 +22,7 @@ public:
 	 * @param data 		the affinity matrix
 	 * @param numDims	the number of dimensions to consider when clustering
 	 */
-	SpectralClustering(Eigen::MatrixXd& data, int numDims);
+	SpectralClustering(Eigen::MatrixXd& data, int numDims, double mStopCriteria);
 	virtual ~SpectralClustering();
 
 	/**
@@ -43,6 +43,7 @@ protected:
 	int mNumDims;
 	Eigen::MatrixXd mEigenVectors;
 	int mNumClusters;
+    double mStopCriteria;
 };
 
 #endif /* SPECTRALCLUSTERING_H_ */

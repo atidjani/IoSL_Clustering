@@ -17,13 +17,14 @@
 * @param data 		the affinity matrix
 * @param numDims	the number of dimensions to consider when clustering
 */
-SpectralClustering::SpectralClustering(Eigen::MatrixXd& data, int numDims):
+SpectralClustering::SpectralClustering(Eigen::MatrixXd& data, int numDims, double stopCriteria):
 	mNumDims(numDims),
-	mNumClusters(0)
+	mNumClusters(0),
+    mStopCriteria(stopCriteria)
 {
 	Eigen::MatrixXd Deg = Eigen::MatrixXd::Zero(data.rows(),data.cols());
 
-	// calc normalised laplacian 
+	// calc normalised laplacian
 	for ( int i=0; i < data.cols(); i++) {
 		Deg(i,i)=1/(sqrt((data.row(i).sum())) );
 	}
@@ -60,7 +61,7 @@ SpectralClustering::~SpectralClustering() {
  */
 std::vector<std::vector<int> > SpectralClustering::clusterRotate() {
 
-	ClusterRotate* c = new ClusterRotate();
+	ClusterRotate* c = new ClusterRotate(1, mStopCriteria);
 	std::vector<std::vector<int> > clusters = c->cluster(mEigenVectors);
 
 	mNumClusters = clusters.size();

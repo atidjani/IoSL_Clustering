@@ -1,6 +1,4 @@
 #include <Rcpp.h>
-//#include "ANN.h"
-//#include "R_regionQuery.h"
 #include <math.h>
 #include <stack>
 #include <set>
@@ -27,28 +25,21 @@ float II(int y, NumericVector reachdist, IntegerVector co){
 }
 
 float GD(int y,NumericVector reachdist, IntegerVector co){
-  //std::cout << "GD";
-  //std::cout << w * (reachdist[y+1] - reachdist[y]) + w * (reachdist[y-1] - reachdist[y]);
   return w * (reachdist[co[y+1]-1] + reachdist[co[y-1]-1] - 2 * reachdist[co[y]-1]);
 }
 
 std::set<int> BuildCluster(IntegerVector co, int startPnt, int endPnt, NumericVector clusterId, int id){
   std::set<int> cluster;
-  // std::cout << "building cluster from " << startPnt << " to " << endPnt << std::endl;
   for(int i = startPnt; i <= endPnt; i++){
       cluster.insert(co[i]);
-      //if(clusterId[co[i]] == -1)clusterId[co[i]]=id;
   }
 
-  //+std::cout << cluster.size() << std::endl;
   return cluster;
 }
 
 // [[Rcpp::export]]
 NumericVector HelpFunction(NumericVector cluster, int size){
    NumericVector vector(size);
-   //std::cout << cluster[0];
-   //std::cout << cluster[1];
    for(int i = 0; i < cluster.size(); i++){
      vector[cluster[i]-1] = 1;
    }
@@ -65,13 +56,13 @@ float calculateW(NumericVector dists){
     sum+=dist;
     counter++;
   }
-  return (sum/counter) * 20 ;
+  return (sum/counter) / 20 ;
 }
 
 // [[Rcpp::export]]
 List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVector coredist, int minPts, float t) {
-
-  w = calculateW(reachdist);
+  w = 0.1;
+  //w = calculateW(reachdist);
   //std::cout << w <<std::endl;
 
   NumericVector clusterId(co.size(),-1);
@@ -82,26 +73,19 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVecto
   int i =0;
   int o = co[i];//first point of the ordering
   startPts.push(i);// pushing the index of the point instead of the point itself
-  //std::cout << "start point : " <<  i << std::endl ;
-  //std::cout << "reach dist of point " << o << "  :  " << reachdist[co[i]-1] << std::endl;
-  //i++;
-  //std::cout << "order size " << co.size()<< "   " << co[co.size()];
   while(i+1 < co.size()){
     i++;
     o = co[i];
-    //std::cout << "reach dist of point " << i << "  :  " << reachdist[co[i]-1] << std::endl;
-    //std::cout << "II of point " << i << "  :  " << II(i, reachdist, co) << std::endl;
-    //i++;
-
     if(i+1 < co.size()){// i need to check this more thouroughly
+      //std::cout << "II of point " << i << "  :  " << II(i, reachdist, co) << std::endl;
+      //std::cout << "GD of point " << i << "  :  " << GD(i, reachdist, co) << std::endl;
       if(II(i, reachdist, co) > t){
         //std::cout << "Inflection point " << i <<std::endl;
-        // std::cout << "reach dist of point " << i << "  :  " << reachdist[co[i]-1] << std::endl;
-        // std::cout << "II of point " << i << "  :  " << II(i, reachdist, co) << std::endl;
-        // std::cout << "GD of point " << i << "  :  " << GD(i, reachdist, co) << std::endl;
+        //std::cout << "reach dist of point " << i << "  :  " << reachdist[co[i]-1] << std::endl;
+        //std::cout << "II of point " << i << "  :  " << II(i, reachdist, co) << std::endl;
+        //std::cout << "GD of point " << i << "  :  " << GD(i, reachdist, co) << std::endl;
         if(GD(i, reachdist, co) > 0){
 
-          //std::cout << "CurrentCluster size " << currentCluster.size() << std::endl;
           if(currentCluster.size() >= minPts){ // first object outside a cluster
             setOfClusters.insert(currentCluster);
           }
@@ -114,14 +98,18 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVecto
 
           while(reachdist[co[startPts.top()]-1] < reachdist[co[i]-1]){
             //setOfClusters.insert("set of objects from startPts.top() to last end point");
+            if(i-1-startPts.top()+1 >= minPts){// not in the original paper
             setOfClusters.insert(BuildCluster(co,startPts.top(),i-1,clusterId, id));// last end point would be i-1
             id++;
             startPts.pop();
+            }
           }
 
           //setOfClusters.insert("set of objects from startPts.top() to last end point");
-          setOfClusters.insert(BuildCluster(co,startPts.top(),i-1,clusterId, id));// last end point would be i-1
-          id++;
+          if(i-1-startPts.top()+1 >= minPts){// not in the original paper
+            setOfClusters.insert(BuildCluster(co,startPts.top(),i-1,clusterId, id));// last end point would be i-1
+            id++;
+          }
 
           if(reachdist[co[i+1]-1] <= reachdist[co[i]-1]){ //start point: <= instead of < we got better result
             //std::cout << "start point : " <<  i << std::endl ;
@@ -129,22 +117,20 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVecto
           }
 
         }else{
-          //std::cout << reachdist[co[i+1]] << "  >  " << reachdist[co[i]] << std::endl;
           if(reachdist[co[i+1]-1] > reachdist[co[i]-1]){
             //currCluster := set of objects from startPts.top() to o;
-            currentCluster = BuildCluster(co,startPts.top(),i,clusterId, id);
-            id++;
+            //if(i-1-startPts.top()+1 >= minPts){// not in the original paper
+              currentCluster = BuildCluster(co,startPts.top(),i,clusterId, id);
+              id++;
+            //}
           }
         }
       }
     }else{
       while(!startPts.empty()){
         //currCluster := set of objects from startPts.top() to o;
-        //std::cout << startPts.top() << " ++++ " << i << std::endl;
         currentCluster = BuildCluster(co,startPts.top(),i,clusterId, id);
         id++;
-        //std::cout << reachdist[co[startPts.top()]] << "  >  " << reachdist[co[i]] << std::endl;
-        //std::cout << reachdist[co[startPts.top()]] << "  >  " << reachdist[co[222]] << std::endl;
         if((reachdist[co[startPts.top()]-1] > reachdist[co[i]-1]) && (currentCluster.size() >= minPts)){
           //setOfClusters.add(currCluster);
           setOfClusters.insert(currentCluster);
@@ -152,11 +138,9 @@ List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVecto
         startPts.pop();
       }
     }
-    //i++;
   }
 
   //return list of clusters
-  //std::cout << setOfClusters.size();
   //the list with points from the dataset in clusters, so the point in the cluster is the same point in the dataset
   List listOfClusters;
   int cpt = 1;
