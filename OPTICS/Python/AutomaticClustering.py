@@ -57,11 +57,18 @@ def findLocalMaxima(RPlot, RPoints, nghsize):
 """
 def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size, thres):
 
+    # When clusters have largely differing densities, a single cut cannot determine all of the clusters, and secondly,
+    # it is often difficult to determine where to cut through the representation so that the extracted clusters are significant
     ##############################  Adjustable parameters ##########################
-    reachability_threshold = 0.09
+    reachability_threshold = 0.02
     use_reach_thresh = False
 
-    #the maximum ratio we allow of average height of clusters on the right and left to the local maxima in question
+    # The maximum ratio we allow of average height of clusters on the right and left to the local maxima in question
+    # The significance of a separation between regions is determined by the ratio between the height of a
+    # local maximum p and the height of the region to the left and to the right of p. The ratio for a significant
+    # separation is set to 0.75, i.e. for a local maximum p to be considered a cluster separation, the average
+    # reachability value to the left and to the right has to be at least 0.75 times lower than the reachability value
+    # of p
     maximaRatio = thres #.75 through heuristics any value between 0.7 and 0.8 is good
 
     #if ratio above exceeds maximaRatio, find which of the clusters to the left and right to reject based on rejectionRatio
@@ -107,6 +114,17 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     # print Node1,Node2
 
 
+    if use_reach_thresh:
+        # if avgReachValue1 < reachability_threshold:
+        if LocalMax1 < reachability_threshold:
+            Nodelist.remove((Node1, LocalMax1))
+
+        # if avgReachValue2 < reachability_threshold:
+        if LocalMax2 < reachability_threshold:
+            Nodelist.remove((Node2, LocalMax2))
+
+        clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size, thres)
+        return
 
     if RPlot[s] < significantMin:
         node.assignSplitPoint(-1)
@@ -127,18 +145,6 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     # print 'avgReachValue1',avgReachValue1
     # print 'avgReachValue2',avgReachValue2
 
-    if use_reach_thresh:
-        # if avgReachValue1 < reachability_threshold:
-        if LocalMax1 < reachability_threshold:
-            Nodelist.remove((Node1, LocalMax1))
-
-        # if avgReachValue2 < reachability_threshold:
-        if LocalMax2 < reachability_threshold:
-            Nodelist.remove((Node2, LocalMax2))
-
-        clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size, thres)
-        return
-
 
     '''
     To adjust the fineness of the clustering, adjust the following ratios.
@@ -146,20 +152,19 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     local minimums, and the more cuts the resulting tree will have.
     '''
 
-    if not use_reach_thresh:
-        if float(avgReachValue1 / float(RPlot[s])) > maximaRatio or float(avgReachValue2 / float(RPlot[s])) > maximaRatio:
+    if float(avgReachValue1 / float(RPlot[s])) > maximaRatio or float(avgReachValue2 / float(RPlot[s])) > maximaRatio:
 
-            if float(avgReachValue1 / float(RPlot[s])) < rejectionRatio:
-              #reject node 2
-                Nodelist.remove((Node2, LocalMax2))
-            if float(avgReachValue2 / float(RPlot[s])) < rejectionRatio:
-              #reject node 1
-                Nodelist.remove((Node1, LocalMax1))
-            if float(avgReachValue1 / float(RPlot[s])) >= rejectionRatio and float(avgReachValue2 / float(RPlot[s])) >= rejectionRatio:
-                node.assignSplitPoint(-1)
-                #since splitpoint is not significant, ignore this split and continue (reject both child nodes)
-                clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size, thres)
-                return
+        if float(avgReachValue1 / float(RPlot[s])) < rejectionRatio:
+          #reject node 2
+            Nodelist.remove((Node2, LocalMax2))
+        if float(avgReachValue2 / float(RPlot[s])) < rejectionRatio:
+          #reject node 1
+            Nodelist.remove((Node1, LocalMax1))
+        if float(avgReachValue1 / float(RPlot[s])) >= rejectionRatio and float(avgReachValue2 / float(RPlot[s])) >= rejectionRatio:
+            node.assignSplitPoint(-1)
+            #since splitpoint is not significant, ignore this split and continue (reject both child nodes)
+            clusterTree(node,parentNode, localMaximaPoints, RPlot, RPoints, min_cluster_size, thres)
+            return
 
 
 
@@ -301,6 +306,8 @@ def automaticCluster(RPlot, RPoints, thres):
     
     min_cluster_size = int(min_cluster_size_ratio * len(RPoints))
 
+    # If one of these nodes does not have the minimum cluster size it is deleted. If the
+    # nodes are large enough, they will be added to the tree
     # The smallest size of any cluster is 5
     if min_cluster_size < 5:
         min_cluster_size = 5

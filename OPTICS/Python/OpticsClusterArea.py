@@ -104,7 +104,9 @@ def optics(x, k, distMethod = 'euclidean'):
 
 
     order.append(seeds[0])
-    RD[0] = 0 #we set this point to 0 as it does not get overwritten
+    # the reachability value of the first point in order is 0 and not infinity
+    RD[0] = 0 # we set this point to 0 as it does not get overwritten
+
     return RD, CD, order
 
 def euclid(i, x):
