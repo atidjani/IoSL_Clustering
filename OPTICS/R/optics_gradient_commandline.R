@@ -29,10 +29,10 @@ for (cluster in gradientClusters) {
     i = i+1
 }
 
-for (i in 1:nrow(dataset)) {
-    cat(dataset$V1[i], dataset$V2[i], finalClusters[i], sep=',')
-    cat('\n')
-}
+#for (i in 1:nrow(dataset)) {
+#    cat(dataset$V1[i], dataset$V2[i], finalClusters[i], sep=',')
+#    cat('\n')
+#}
 
 
 # Prepare clusters list for printing
@@ -41,10 +41,10 @@ for (i in 1:nrow(dataset)) {
 # clustersList <- gsub("^\\s+|\\s+$", "", clustersList)
 
 # Print interrupt
-cat("=\n")
+#cat("=\n")
 
 # Prepare reachability distances for printing
-for (point in res$order){
-    cat(res$reachdist[point], finalClusters[point], sep=",")
-    cat("\n")
-}
+#for (point in res$order){
+#    cat(res$reachdist[point], finalClusters[point], sep=",")
+#    cat("\n")
+#}

@@ -34,7 +34,7 @@ class ParametersSTSC(basicForm):
     numClusters = forms.IntegerField(required=True,min_value=1,label='# Clusters')
     k = forms.IntegerField(required=True,min_value=0)
     simCut = forms.DecimalField(required=True, min_value = 0);
-    stop = forms.ChoiceField([(0.01, '0.01'), (0.001, '0.001'), (0.0001, '0.0001')])
+    stop = forms.ChoiceField([(0.01, '0.01'), (0.001, '0.001'), (0.0001, '0.0001'), (0.00001, '0.00001')])
 
 
 class ParametersOPTICSP(basicForm) :
