@@ -61,7 +61,8 @@ float calculateW(NumericVector dists){
 
 // [[Rcpp::export]]
 List gradient_clustering(IntegerVector co, NumericVector reachdist, NumericVector coredist, int minPts, float t) {
-  w = 0.1;
+
+  w = 0.02; 
   //w = calculateW(reachdist);
   //std::cout << w <<std::endl;
 
