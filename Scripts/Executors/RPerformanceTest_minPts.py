@@ -3,7 +3,7 @@ import sys, time, os
 
 from sklearn.datasets.samples_generator import make_blobs
 
-sizes = [250, 500, 1000, 1500, 1750]
+sizes = [5000]
 minPoints = [5, 10, 20, 30]
 exeTimes = []
 
@@ -16,9 +16,9 @@ for size in sizes :
     sizeTime = []
     for minPoint in minPoints:
         args = ['Rscript', exePath, filePath, str(eps), str(minPoint), str(angle)]
-        print (minPoint)
+        print minPoint
         for i in range(0, 3):
-            print (i)
+            print i
             start = time.time()
             proc = s.Popen(args, stdout = s.PIPE)
             proc.wait()

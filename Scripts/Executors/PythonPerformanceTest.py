@@ -6,20 +6,20 @@ sys.path.append("/home/fabio/First/IoSL/OPTICS/Python") #Change this path when r
 from demo import Optics
 from sklearn.datasets.samples_generator import make_blobs
 
-sizes = [250, 500, 1000, 1500, 1750]
-minPoints = [5, 10, 20, 30]
+sizes = [250, 500, 1000, 1500, 2000, 2500, 3000, 5000, 10000]
+minPoints = [15, 30, 60]
 exeTimes = []
 eps = 10
 threshold = 0.75
 
 for size in sizes :
-    print(size)
+    print size
     sizeTime = []
     filePath = "/tmp/" + str(size) + ".txt"
     for minPoint in minPoints :
-        print (minPoint)
+        print minPoint
         for i in range(0, 3):
-            print (i)
+            print i
             start = time.time()
             opt = Optics(filePath, eps, minPoint, threshold)
             numClusters, clusters, rList = opt.demo()

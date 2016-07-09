@@ -29,7 +29,8 @@ class Optics():
     __inputfile = ''
 
     def __init__(self, inputfile, eps = 0.4, minpts = 7, thres = 0.75):
-        self.__minpts = minpts
+        self.__minpts = minpts # The parameter MinPts allows the core-distance and
+        # reachability-distance of a point p to capture the point density around that point
         self.__eps = eps
         self.__thres = thres
         self.__inputfile = inputfile
@@ -53,6 +54,7 @@ class Optics():
         k = self.__minpts
 
         points_list = []
+        # Using different starting points in the OPTICS algorithm will also produce different reachability plots
         with open(self.__inputfile, 'rb') as f:
             try:
                 file_reader = csv.reader(f, delimiter=',')

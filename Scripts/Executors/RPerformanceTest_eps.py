@@ -3,8 +3,8 @@ import sys, time, os
 
 from sklearn.datasets.samples_generator import make_blobs
 
-sizes = [250, 500, 750, 1000, 1500]
-epsilons = [0.1, 0.5, 1, 5]
+sizes = [250, 500, 1000, 1500, 2000, 2500, 3000, 5000, 10000]
+epsilons = [0.5, 1, 5]
 exeTimes = []
 
 exePath = 'OPTICS/R/optics_gradient_commandline.R'
@@ -16,9 +16,9 @@ for size in sizes :
     sizeTime = []
     for eps in epsilons:
         args = ['Rscript', exePath, filePath, str(eps), str(min_pts), str(angle)]
-        print (eps)
+        print eps
         for i in range(0, 3):
-            print (i)
+            print i
             start = time.time()
             proc = s.Popen(args, stdout = s.PIPE)
             proc.wait()
