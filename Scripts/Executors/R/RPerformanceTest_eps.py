@@ -3,7 +3,7 @@ import sys, time, os
 
 from sklearn.datasets.samples_generator import make_blobs
 
-sizes = [250, 500, 1000, 1500, 2000, 2500, 3000, 5000, 10000]
+sizes = [250, 500, 1000, 1500, 2000, 2500, 3000, 5000, 10000, 20000]
 epsilons = [0.5, 1, 5]
 exeTimes = []
 
@@ -26,6 +26,6 @@ for size in sizes :
             sizeTime.append(stop-start)
         exeTimes.append(sizeTime)
 
-with open('result.txt', 'wb')  as f :
+with open('R_eps.txt', 'wb')  as f :
     for sizeRun in exeTimes :
         f.write((str(sizeRun[0]) + ',' + str(sizeRun[1]) + ',' + str(sizeRun[2]) + '\n').encode('utf-8'))

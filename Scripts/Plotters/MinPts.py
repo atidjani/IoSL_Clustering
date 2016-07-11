@@ -1,7 +1,7 @@
 import sys,math
 import matplotlib.pyplot as plt
 
-sizes = [250, 500, 1000, 1500, 1750]
+sizes = [250, 500, 1000, 1500, 2000, 2500, 3000, 5000, 10000, 20000]
 minPoints = [5, 10, 20, 30]
 
 def mean(vect):
@@ -48,9 +48,8 @@ plt.errorbar(sizes, [i[0] for i in five], yerr=[i[1] for i in five], fmt='gs', l
 plt.errorbar(sizes, [i[0] for i in ten], yerr=[i[1] for i in ten], fmt='bo', label="10")
 plt.errorbar(sizes, [i[0] for i in twenty], yerr=[i[1] for i in twenty], fmt='r^', label="20")
 plt.errorbar(sizes, [i[0] for i in thirty], yerr=[i[1] for i in thirty], fmt='y^', label="30")
-plt.xlim([0, 2000])
-plt.ylim([0, 1])
+plt.xlim([0, 20500])
 plt.xlabel('Dataset Sizes')
 plt.ylabel('Execution time (s)')
 
-fig.savefig("PythonPerformances_minPts.pdf", format="pdf")
+fig.savefig("minPts.pdf", format="pdf")

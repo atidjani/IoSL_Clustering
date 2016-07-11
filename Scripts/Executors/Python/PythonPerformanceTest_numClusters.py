@@ -1,16 +1,18 @@
 import subprocess as s
 import sys, time, os
 
+sys.path.append("/home/fabio/First/IoSL/OPTICS/Python") #Change this path when running on your machine
+
+from demo import Optics
 from sklearn.datasets.samples_generator import make_blobs
 
 exeTimes = []
 
 maxNumClusters = 10
 numPoints = 1000
-exePath = 'OPTICS/R/optics_gradient_commandline.R'
 min_pts = 10
 eps = 15
-angle = -0.5
+threshold = 0.75
 
 for numCluster in range(1, maxNumClusters + 1):
     print numCluster
@@ -22,18 +24,17 @@ for numCluster in range(1, maxNumClusters + 1):
         f.write((str(a[0]) +','+ str(a[1]) + '\n').encode('utf-8'))
     f.close()
 
-    args = ['Rscript', exePath, filePath, str(eps), str(min_pts), str(angle)]
     sizeTime = []
     for i in range(0, 3):
         print i
         start = time.time()
-        proc = s.Popen(args, stdout = s.PIPE)
-        proc.wait()
+        opt = Optics(filePath, eps, min_pts, threshold)
+        numClusters, clusters, rList = opt.demo()
         stop = time.time()
         sizeTime.append(stop-start)
     exeTimes.append(sizeTime)
     os.remove(filePath)
 
-with open('result.txt', 'wb')  as f :
+with open('P_numClusters.txt', 'wb')  as f :
     for sizeRun in exeTimes :
         f.write((str(sizeRun[0]) + ',' + str(sizeRun[1]) + ',' + str(sizeRun[2]) + '\n').encode('utf-8'))
