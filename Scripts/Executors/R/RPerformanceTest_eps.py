@@ -4,7 +4,7 @@ import sys, time, os
 from sklearn.datasets.samples_generator import make_blobs
 
 sizes = [250, 500, 1000, 1500, 2000, 2500, 3000, 5000, 7500, 10000]
-epsilons = [0.5, 1, 5]
+epsilons = [1, 5, 10]
 exeTimes = []
 
 exePath = 'OPTICS/R/optics_gradient_commandline.R'
