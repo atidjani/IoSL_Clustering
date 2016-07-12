@@ -24,15 +24,15 @@ for numCluster in range(1, maxNumClusters + 1):
         f.write((str(a[0]) +','+ str(a[1]) + '\n').encode('utf-8'))
     f.close()
 
-    sizeTime = []
+    runTimes = []
     for i in range(0, 3):
         print i
         start = time.time()
         opt = Optics(filePath, eps, min_pts, threshold)
         numClusters, clusters, rList = opt.demo()
         stop = time.time()
-        sizeTime.append(stop-start)
-    exeTimes.append(sizeTime)
+        runTimes.append(stop-start)
+    exeTimes.append(runTimes)
     os.remove(filePath)
 
 with open('P_numClusters.txt', 'wb')  as f :

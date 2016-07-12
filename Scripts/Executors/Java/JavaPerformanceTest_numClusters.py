@@ -6,8 +6,8 @@ from sklearn.datasets.samples_generator import make_blobs
 exeTimes = []
 
 maxNumClusters = 10
-numPoints = 1000
-exePath = 'OPTICS/R/optics_gradient_commandline.R'
+numPoints = 5000
+exePath = 'OPTICS/Java/elki/target/elki-0.7.2-SNAPSHOT.jar'
 min_pts = 10
 eps = 15
 xi = 0.10
@@ -22,20 +22,20 @@ for numCluster in range(1, maxNumClusters + 1):
         f.write((str(a[0]) +','+ str(a[1]) + '\n').encode('utf-8'))
     f.close()
 
-    args = ['java -jar', exePath, 'KDDCLIApplication' \
+    args = ['java', '-jar', exePath, 'KDDCLIApplication', \
             '-dbc.in', filePath, \
-            '-algorithm clustering.optics.OPTICSXi', \
+            '-algorithm', 'clustering.optics.OPTICSXi', \
             '-opticsxi.xi', str(xi), \
             '-optics.minpts', str(min_pts), \
             '-optics.epsilon', str(eps)]
-    sizeTime = []
+    runTimes = []
     for i in range(0, 3):
         print i
         start = time.time()
-        proc = s.Popen(args, stdout = s.PIPE)
+        proc = s.Popen(args)
         proc.wait()
         stop = time.time()
-        sizeTime.append(stop-start)
+        runTimes.append(stop-start)
     exeTimes.append(sizeTime)
     os.remove(filePath)
 

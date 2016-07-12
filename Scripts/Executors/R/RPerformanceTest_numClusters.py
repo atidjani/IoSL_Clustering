@@ -6,8 +6,8 @@ from sklearn.datasets.samples_generator import make_blobs
 exeTimes = []
 
 maxNumClusters = 10
-numPoints = 1000
-exePath = 'OPTICS/R/optics_gradient_commandline.R'
+numPoints = 5000
+exePath = 'Scripts/Executors/R/ROpticsScript.R'
 min_pts = 10
 eps = 15
 angle = -0.5
@@ -22,16 +22,16 @@ for numCluster in range(1, maxNumClusters + 1):
         f.write((str(a[0]) +','+ str(a[1]) + '\n').encode('utf-8'))
     f.close()
 
-    args = ['Rscript', exePath, filePath, str(eps), str(min_pts), str(angle)]
-    sizeTime = []
+    args = ['Rscript', '--vanilla', exePath, filePath, str(eps), str(min_pts), str(angle)]
+    repTime = []
     for i in range(0, 3):
         print i
-        start = time.time()
         proc = s.Popen(args, stdout = s.PIPE)
         proc.wait()
-        stop = time.time()
-        sizeTime.append(stop-start)
-    exeTimes.append(sizeTime)
+        time = proc.stdout.read().decode('utf-8')
+        print time
+        repTime.append(time)
+    exeTimes.append(repTime)
     os.remove(filePath)
 
 with open('R_numClusters.txt', 'wb')  as f :

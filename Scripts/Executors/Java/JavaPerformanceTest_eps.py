@@ -3,33 +3,33 @@ import sys, time, os
 
 from sklearn.datasets.samples_generator import make_blobs
 
-sizes = [250, 500, 1000, 1500, 2000, 2500, 3000, 5000, 10000, 20000]
-epsilons = [0.5, 1, 5]
+sizes = [250, 500, 1000, 1500, 2000, 2500, 3000, 5000, 7500, 10000]
+epsilons = [1, 5, 10]
 exeTimes = []
 
-exePath = 'OPTICS/Java/elki.jar'
+exePath = 'OPTICS/Java/elki/target/elki-0.7.2-SNAPSHOT.jar'
 min_pts = 10
 xi = 0.10
 
 for size in sizes :
     filePath = "/tmp/" + str(size) + ".txt"
-    sizeTime = []
     for eps in epsilons:
-        args = ['java -jar', exePath, 'KDDCLIApplication' \
+        args = ['java', '-jar', exePath, 'KDDCLIApplication', \
                 '-dbc.in', filePath, \
-                '-algorithm clustering.optics.OPTICSXi', \
+                '-algorithm', 'clustering.optics.OPTICSXi', \
                 '-opticsxi.xi', str(xi), \
                 '-optics.minpts', str(min_pts), \
                 '-optics.epsilon', str(eps)]
         print eps
+        epsRun = []
         for i in range(0, 3):
             print i
             start = time.time()
-            proc = s.Popen(args, shell=True, stdout = s.PIPE)
+            proc = s.Popen(args)
             proc.wait()
             stop = time.time()
-            sizeTime.append(stop-start)
-        exeTimes.append(sizeTime)
+            epsRun.append(stop-start)
+        exeTimes.append(epsRun)
 
 with open('result.txt', 'wb')  as f :
     for sizeRun in exeTimes :
