@@ -5,11 +5,11 @@ from sklearn.datasets.samples_generator import make_blobs
 
 exeTimes = []
 
-maxNumClusters = 10
+maxNumClusters = 15
 numPoints = 5000
 exePath = 'Scripts/Executors/R/ROpticsScript.R'
 min_pts = 10
-eps = 15
+eps = 10
 angle = -0.5
 
 for numCluster in range(1, maxNumClusters + 1):

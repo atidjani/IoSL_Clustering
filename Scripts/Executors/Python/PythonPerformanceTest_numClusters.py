@@ -1,17 +1,17 @@
 import subprocess as s
 import sys, time, os
 
-sys.path.append("/home/fabio/First/IoSL/OPTICS/Python") #Change this path when running on your machine
+sys.path.append("OPTICS/Python") #Change this path when running on your machine
 
 from demo import Optics
 from sklearn.datasets.samples_generator import make_blobs
 
 exeTimes = []
 
-maxNumClusters = 10
-numPoints = 1000
+maxNumClusters = 15
+numPoints = 5000
 min_pts = 10
-eps = 15
+eps = 10
 threshold = 0.75
 
 for numCluster in range(1, maxNumClusters + 1):

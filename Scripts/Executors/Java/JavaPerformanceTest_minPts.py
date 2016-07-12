@@ -4,7 +4,7 @@ import sys, time, os
 from sklearn.datasets.samples_generator import make_blobs
 
 sizes = [250, 500, 1000, 1500, 2000, 2500, 3000, 5000, 7500, 10000]
-minPoints = [15,30,60]
+minPoints = [5, 10, 20, 30]
 exeTimes = []
 
 exePath = 'OPTICS/Java/elki/target/elki-0.7.2-SNAPSHOT.jar'
@@ -30,7 +30,7 @@ for size in sizes :
             proc.wait()
             stop = time.time()
             minPointsRun.append(stop-start)
-        exeTimes.append(sizeTime)
+        exeTimes.append(minPointsRun)
 
 with open('J_minPts.txt', 'wb')  as f :
     for sizeRun in exeTimes :

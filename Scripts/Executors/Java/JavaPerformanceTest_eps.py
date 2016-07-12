@@ -31,6 +31,6 @@ for size in sizes :
             epsRun.append(stop-start)
         exeTimes.append(epsRun)
 
-with open('result.txt', 'wb')  as f :
+with open('J_eps.txt', 'wb')  as f :
     for sizeRun in exeTimes :
         f.write((str(sizeRun[0]) + ',' + str(sizeRun[1]) + ',' + str(sizeRun[2]) + '\n').encode('utf-8'))

@@ -5,11 +5,11 @@ from sklearn.datasets.samples_generator import make_blobs
 
 exeTimes = []
 
-maxNumClusters = 10
+maxNumClusters = 15
 numPoints = 5000
 exePath = 'OPTICS/Java/elki/target/elki-0.7.2-SNAPSHOT.jar'
 min_pts = 10
-eps = 15
+eps = 10
 xi = 0.10
 
 for numCluster in range(1, maxNumClusters + 1):
@@ -36,9 +36,9 @@ for numCluster in range(1, maxNumClusters + 1):
         proc.wait()
         stop = time.time()
         runTimes.append(stop-start)
-    exeTimes.append(sizeTime)
+    exeTimes.append(runTimes)
     os.remove(filePath)
 
-with open('result.txt', 'wb')  as f :
+with open('J_numClusters.txt', 'wb')  as f :
     for sizeRun in exeTimes :
         f.write((str(sizeRun[0]) + ',' + str(sizeRun[1]) + ',' + str(sizeRun[2]) + '\n').encode('utf-8'))

@@ -1,7 +1,7 @@
 import subprocess as s
 import sys, time, os
 
-sys.path.append("/home/fabio/First/IoSL/OPTICS/Python") #Change this path when running on your machine
+sys.path.append("OPTICS/Python") #Change this path when running on your machine
 
 from demo import Optics
 from sklearn.datasets.samples_generator import make_blobs
@@ -25,7 +25,7 @@ for size in sizes :
             numClusters, clusters, rList = opt.demo()
             stop = time.time()
             minPointsRun.append(stop-start)
-        exeTimes.append(sizeTime)
+        exeTimes.append(minPointsRun)
 
 with open('P_minPts.txt', 'wb')  as f :
     for sizeRun in exeTimes :
