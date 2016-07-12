@@ -29,22 +29,16 @@ for (cluster in gradientClusters) {
     i = i+1
 }
 
-#for (i in 1:nrow(dataset)) {
-#    cat(dataset$V1[i], dataset$V2[i], finalClusters[i], sep=',')
-#    cat('\n')
-#}
-
-
-# Prepare clusters list for printing
-# clustersList = unlist(lapply(clusters, paste, collapse=" "))
-# clustersList <- str_replace_all(clustersList, " " , ",") #Replace spaces with commas
-# clustersList <- gsub("^\\s+|\\s+$", "", clustersList)
+for (i in 1:nrow(dataset)) {
+    cat(dataset$V1[i], dataset$V2[i], finalClusters[i], sep=',')
+    cat('\n')
+}
 
 # Print interrupt
-#cat("=\n")
+cat("=\n")
 
 # Prepare reachability distances for printing
-#for (point in res$order){
-#    cat(res$reachdist[point], finalClusters[point], sep=",")
-#    cat("\n")
-#}
+for (point in res$order){
+    cat(res$reachdist[point], finalClusters[point], sep=",")
+    cat("\n")
+}
