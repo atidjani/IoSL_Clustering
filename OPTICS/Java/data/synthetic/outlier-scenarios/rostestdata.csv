@@ -1,0 +1,20 @@
+########################################################
+## Number of clusters: 3
+########################################################
+## Cluster: Cluster3
+########################################################
+## Size: 300
+## Density correction factor: 1.0
+## Generators:
+##   Normal Distribution (mean=0.1, stddev=0.035)
+##   Normal Distribution (mean=0.3, stddev=0.035)
+## Discards: 0 Retries left: 1000
+## Density correction factor estimation: 1.0
+########################################################
+0.5 0.5 Cluster3
+0.6 0.6 Cluster3
+0.6 0.5 Cluster3
+
+0.4000000000000000 0.20000000000000000 Outlier
+0.9000000000000000 0.80000000000000000 Outlier
+0.8000000000000000 0.70000000000000000 Outlier
