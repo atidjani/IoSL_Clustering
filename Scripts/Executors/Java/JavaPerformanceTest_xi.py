@@ -31,6 +31,6 @@ for size in sizes :
             xiRun.append(stop-start)
         exeTimes.append(xiRun)
 
-with open('J_eps.txt', 'wb')  as f :
+with open('J_xi.txt', 'wb')  as f :
     for sizeRun in exeTimes :
         f.write((str(sizeRun[0]) + ',' + str(sizeRun[1]) + ',' + str(sizeRun[2]) + '\n').encode('utf-8'))

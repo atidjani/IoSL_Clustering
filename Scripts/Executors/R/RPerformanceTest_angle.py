@@ -27,6 +27,6 @@ for size in sizes :
             angleRun.append(float(time))
         exeTimes.append(angleRun)
 
-with open('R_eps.txt', 'wb')  as f :
+with open('R_angle.txt', 'wb')  as f :
     for sizeRun in exeTimes :
         f.write((str(sizeRun[0]) + ',' + str(sizeRun[1]) + ',' + str(sizeRun[2]) + '\n').encode('utf-8'))

@@ -27,6 +27,6 @@ for size in sizes :
             thresholdRun.append(stop-start)
         exeTimes.append(thresholdRun)
 
-with open('P_minPts.txt', 'wb')  as f :
+with open('P_threshold.txt', 'wb')  as f :
     for sizeRun in exeTimes :
         f.write((str(sizeRun[0]) + ',' + str(sizeRun[1]) + ',' + str(sizeRun[2]) + '\n').encode('utf-8'))
