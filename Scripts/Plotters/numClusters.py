@@ -1,7 +1,7 @@
 import sys,math
 import matplotlib.pyplot as plt
 
-sizes = [1,2,3,4,5,6,7,8,9,10]
+sizes = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
 def mean(vect):
     sum = 0
@@ -29,15 +29,15 @@ with open(sys.argv[1], 'r')  as f:
 time = []
 
 for i in range(0, len(sizes)):
-    time.append([mean(resultTimes[i]), variance(resultTimes[i]))
+    time.append([mean(resultTimes[i]), variance(resultTimes[i])])
 
 print(time)
 
 fig = plt.figure(figsize=(9,9))
-plt.errorbar(sizes, [i[0] for i in time], yerr=[i[1] for i in time], fmt='gs', label="0.1")
-plt.xlim([0, 11])
-plt.ylim([0, 10])
-plt.xlabel('Dataset Sizes')
+plt.errorbar(sizes, [i[0] for i in time], yerr=[i[1] for i in time], fmt='gs', label="")
+plt.xlim([0, 16])
+plt.ylim([0, 9])
+plt.xlabel('# Clusters')
 plt.ylabel('Execution time (s)')
 
 fig.savefig("numClusters.pdf", format="pdf")
