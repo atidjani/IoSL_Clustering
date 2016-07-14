@@ -1,8 +1,6 @@
 import subprocess as s
 import sys, time, os
 
-from sklearn.datasets.samples_generator import make_blobs
-
 sizes = [250, 500, 1000, 1500, 2001, 3000]
 similarities = [0.5, 1, 5]
 exeTimes = []

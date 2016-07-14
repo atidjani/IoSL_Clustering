@@ -4,7 +4,6 @@ import sys, time, os
 sys.path.append("OPTICS/Python") #Change this path when running on your machine
 
 from demo import Optics
-from sklearn.datasets.samples_generator import make_blobs
 
 sizes = [250, 500, 1000, 1500, 2000, 2500, 3000, 5000, 7500, 10000]
 thresholds = [0.5, 0.75, 0.90]
