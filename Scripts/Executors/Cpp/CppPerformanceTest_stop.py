@@ -14,9 +14,9 @@ for size in sizes :
     print size
     filePath = "/tmp/" + str(size) + ".txt"
 
-    for stop in stops:
+    for stopCriteria in stops:
         stopRun = []
-	args = [exePath, filePath, str(maxClust), str(K), str(simCut), str(stop)]
+	args = [exePath, filePath, str(maxClust), str(K), str(simCut), str(stopCriteria)]
 	for i in range(0, 3):
 	   print i
 	   start = time.time()

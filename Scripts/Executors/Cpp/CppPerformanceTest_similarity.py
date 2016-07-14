@@ -7,7 +7,7 @@ exeTimes = []
 
 exePath = "../STSC/cpp/runner/build/runner"
 K = 6
-stop = 0.001
+stopCriteria = 0.001
 maxClust = 10
 
 for size in sizes :
@@ -16,7 +16,7 @@ for size in sizes :
 
     for similarity in similaritites:
         similarityRun = []
-	args = [exePath, filePath, str(maxClust), str(K), str(similarity), str(stop)]
+	args = [exePath, filePath, str(maxClust), str(K), str(similarity), str(stopCriteria)]
 	for i in range(0, 3):
 	   print i
 	   start = time.time()

@@ -10,7 +10,7 @@ numPoints = 1500
 exePath = "STSC/cpp/runner/build/runner"
 K = 6
 simCut = 10
-stop = 0.001
+stopCriteria = 0.001
 maxClust = 15
 
 for numCluster in range(1, maxNumClusters + 1):
@@ -23,7 +23,7 @@ for numCluster in range(1, maxNumClusters + 1):
         f.write((str(a[0]) +','+ str(a[1]) + '\n').encode('utf-8'))
     f.close()
 
-    args = [exePath, filePath, str(maxClust), str(K), str(simCut), str(stop)]
+    args = [exePath, filePath, str(maxClust), str(K), str(simCut), str(stopCriteria)]
     repTime = []
     for i in range(0, 3):
         print i
