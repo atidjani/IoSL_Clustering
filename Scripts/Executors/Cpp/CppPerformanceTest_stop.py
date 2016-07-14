@@ -5,7 +5,7 @@ sizes = [250, 500, 1000, 1500, 2001, 3000]
 stops = [0.01, 0.001, 0.0001]
 exeTimes = []
 
-exePath = "../STSC/cpp/runner/build/runner"
+exePath = "STSC/cpp/runner/build/runner"
 K = 6
 maxClust = 10
 simCut = 5
