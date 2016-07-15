@@ -2,7 +2,7 @@ import subprocess as s
 import sys, time, os
 
 sizes = [250, 500, 1000, 1500, 2001, 3000]
-similarities = [0.6, 1, 5]
+similarities = [1, 2.5, 5]
 exeTimes = []
 
 exePath = "STSC/cpp/runner/build/runner"
