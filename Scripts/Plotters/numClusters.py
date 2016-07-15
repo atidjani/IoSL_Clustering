@@ -36,7 +36,7 @@ print(time)
 fig = plt.figure(figsize=(9,9))
 plt.errorbar(sizes, [i[0] for i in time], yerr=[i[1] for i in time], fmt='gs', label="")
 plt.xlim([0, 16])
-plt.ylim([0, 9])
+plt.ylim([0, 15])
 plt.xlabel('# Clusters')
 plt.ylabel('Execution time (s)')
 
