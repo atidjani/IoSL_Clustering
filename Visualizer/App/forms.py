@@ -5,7 +5,11 @@ from django.core.exceptions import ValidationError
 
 class UploadDatasetForm(forms.Form):
     file = forms.FileField(label='')
-    algorithm = forms.ChoiceField([('STSC', 'STSC'), ('OPTICSP', 'OPTICS - Python'), ('OPTICSR', 'OPTICS - R')], widget=forms.RadioSelect(), label='')
+    algorithm = forms.ChoiceField([('STSC', 'STSC'), \
+            ('OPTICSP', 'OPTICS - Python'), \
+            ('OPTICSR', 'OPTICS - R'), \
+            ('OPTICSJ', 'OPTICS - Java')], \
+            widget=forms.RadioSelect(), label='')
 
 def fullmatch(regex, string):
     """Emulate python-3.4 re.fullmatch()."""
@@ -46,4 +50,9 @@ class ParametersOPTICSR(basicForm) :
     minPoints = forms.IntegerField(required=True,min_value=1)
     eps = forms.DecimalField(required=True,min_value=0, decimal_places=2)
     angle = forms.IntegerField(required=True,min_value=0, max_value=360)
+
+class ParametersOPTICSJ(basicForm) :
+    minPoints = forms.IntegerField(required=True,min_value=1)
+    eps = forms.DecimalField(required=True,min_value=0, decimal_places=2)
+    xi = forms.DecimalField(required=True,min_value=0, max_value=1, decimal_places=2)
 

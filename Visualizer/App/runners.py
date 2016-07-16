@@ -54,13 +54,15 @@ class OpticsRunner():
     __angle = -0.5
     __thres = 0.75
     __path_rScript = 'OPTICS/R/optics_gradient_commandline.R'
+    __path_java = 'OPTICS/Java/elki/target/elki-0.7.2-SNAPSHOT.jar'
 
-    def __init__ (self, filePath , eps = 0.4, min_pts = 5, angle = 120, thres = 0.75):
+    def __init__ (self, filePath , eps = 0.4, min_pts = 5, angle = 120, thres = 0.75, xi = 0.1):
         self.__filePath = filePath
         self.__eps = eps
         self.__min_pts = min_pts
         self.__angle = angle
         self.__thres = thres
+        self.__xi = xi
 
     def run_optics_python(self):
         opt = Optics(self.__filePath, self.__eps, self.__min_pts, self.__thres)
@@ -110,12 +112,79 @@ class OpticsRunner():
 
         return  {'reachabilities' : rList, 'clusters': clusters, 'numClusters': numClusters}
 
+
+    def run_optics_java(self) :
+        # Compute cluster assignments
+        args = ['java', '-jar', self.__path_java, 'KDDCLIApplication', \
+                '-dbc.in', self.__filePath, \
+                '-algorithm', 'clustering.optics.OPTICSXi', \
+                '-opticsxi.xi', str(self.__xi), \
+                '-optics.minpts', str(self.__min_pts), \
+                '-optics.epsilon', str(self.__eps),
+                '-resulthandler', 'ClusteringVectorDumper']
+
+        proc = s.Popen(args, stdout = s.PIPE)
+        output = proc.stdout.read().decode('utf-8').split(' ')
+
+        clstAssignment = list(map(int,output[:-2]))
+        numClusters = max(clstAssignment) + 1
+
+        # Compute reachability plot + points coordinates
+        args = ['java', '-jar', self.__path_java, 'KDDCLIApplication', \
+                '-dbc.in', self.__filePath, \
+                '-algorithm', 'clustering.optics.OPTICSXi', \
+                '-opticsxi.xi', str(self.__xi), \
+                '-optics.minpts', str(self.__min_pts), \
+                '-optics.epsilon', str(self.__eps),
+                '-resulthandler', 'ResultWriter']
+
+        proc = s.Popen(args, stdout = s.PIPE)
+        output = proc.stdout.read().decode('utf-8').split('\n')
+
+        # Output format ID=121 x y reachdist=.... predecessor=...
+        clusters = []
+        processed = [False] * len(clstAssignment)
+        # Init reachabilities
+        reachabilities = []
+        for line in output[:-1]:
+            if (line[0] != '#'): #Ignore comments
+                # Split by space
+                elements = line.split(' ')
+                id = int(elements[0][3:]) - 1
+
+                if (not(processed[id])) :
+                    processed[id] = True
+                    # Point coordinate
+                    point = [float(elements[1]), float(elements[2]), clstAssignment[id]]
+                    clusters.append(point)
+
+                    # reach distance
+                    if elements[4] == 'predecessor=null':
+                        reach = -1
+                    else :
+                        reach = float(elements[3][10:])
+
+                    reachabilities.append([reach, clstAssignment[id]])
+
+        # Inf reach distances equal to max
+        maxReach = max(i[0] for i in reachabilities)
+        for i in range(0, len(reachabilities)) :
+            if (reachabilities[i][0] == -1) :
+                reachabilities[i][0] = maxReach
+
+
+
+        return {'reachabilities' : reachabilities, 'clusters': clusters, 'numClusters': numClusters}
+
+
     def run(self, name):
         points = None
         if 'python' == name.lower():
             return self.run_optics_python()
         elif 'r' == name.lower():
             return self.run_optics_r()
+        elif 'java' == name.lower():
+            return self.run_optics_java()
 
 # obj = OpticsRunner('./Datasets/2.txt',0.4, 7, 0.75)
 # obj.run('python')

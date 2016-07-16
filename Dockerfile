@@ -8,14 +8,12 @@ RUN rm /etc/pacman.d/mirrorlist
 RUN sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.pacnew
 RUN mv /etc/pacman.d/mirrorlist.pacnew /etc/pacman.d/mirrorlist
 
-
 #Install required software
-RUN pacman -Sy python2 python2-pip python2-django python2-psycopg2 eigen2 gcc make cmake r wget --noconfirm
+RUN pacman -Sy python2 python2-pip python2-django python2-psycopg2 gcc make cmake r wget jdk8-openjdk --noconfirm
 
 #Install other python libraries
 RUN pip2 install numpy
 RUN pip2 install hcluster
-
 #For production
 # Set env variables used in this Dockerfile (add a unique prefix, such as DOCKYARD)
 # Local directory with project source
@@ -36,9 +34,22 @@ RUN R CMD INSTALL dbscan_0.9-7.tar.gz
 COPY $DOCKYARD_SRC/STSC/cpp $DOCKYARD_SRVPROJ/STSC/cpp
 # OPTICS Python
 COPY $DOCKYARD_SRC/OPTICS/Python $DOCKYARD_SRVPROJ/OPTICS/Python
+# OPTICS R
 COPY $DOCKYARD_SRC/OPTICS/R $DOCKYARD_SRVPROJ/OPTICS/R
+# OPTICS JAVA
+COPY $DOCKYARD_SRC/OPTICS/Java $DOCKYARD_SRVPROJ/OPTICS/Java
 
 # Compile
+WORKDIR $DOCKYARD_SRVPROJ/STSC/cpp
+
+# Install eigen2
+RUN mv PKGBUILD /tmp
+WORKDIR /tmp
+RUN pacman -S sudo fakeroot pkg-config --noconfirm
+RUN sudo -u nobody makepkg
+RUN pacman -U eigen2-2.0.17-2-any.pkg.tar.xz --noconfirm
+
+# Compile Code
 WORKDIR $DOCKYARD_SRVPROJ/STSC/cpp/build
 RUN cmake ../lib
 RUN make

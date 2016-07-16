@@ -38,6 +38,8 @@ def UploadDatasetView(request):
                 return HttpResponseRedirect('/resultOPTICSR')
             elif form.cleaned_data['algorithm'] == 'OPTICSP' :
                 return HttpResponseRedirect('/resultOPTICSP')
+            elif form.cleaned_data['algorithm'] == 'OPTICSJ' :
+                return HttpResponseRedirect('/resultOPTICSJ')
     else :
         # Trick to avoid None session_key at the first request
         request.session['noise'] = ''
@@ -61,7 +63,7 @@ def ResultViewOPTICSR(request) :
         # Set default parameters
         minPoints = 15
         eps = 10
-        angle = math.cos(math.radians(120))
+        angleV = math.cos(math.radians(120))
     else :
         # POST - New calculation requested
         form = ParametersOPTICSR(request.POST)
@@ -69,7 +71,7 @@ def ResultViewOPTICSR(request) :
         if form.is_valid() :
             minPoints = form.cleaned_data['minPoints']
             eps = form.cleaned_data['eps']
-            angle = math.cos(math.radians(form.cleaned_data['angle']))
+            angleV = math.cos(math.radians(form.cleaned_data['angle']))
 
             functions = form.cleaned_data['noiseFunctions']
             generateNoise = form.cleaned_data['generateNoise']
@@ -84,10 +86,12 @@ def ResultViewOPTICSR(request) :
                 ds.noise = ''
                 ds.save()
         else :
-            return HttpResponseRedirect('/resultOPTICSR')
+            minPoints = 15
+            eps = 10
+            angleV = math.cos(math.radians(120))
 
     filePath = ds.writeFile() # Write dataset on disk
-    optics = OpticsRunner(filePath, eps, minPoints, angle) # Execution of OPTICS
+    optics = OpticsRunner(filePath, eps, minPoints, angle=angleV) # Execution of OPTICS
     output = optics.run('r')
     os.remove(filePath) # Delete File
 
@@ -99,6 +103,65 @@ def ResultViewOPTICSR(request) :
 
     deleteOldEntries()
     return render(request, 'ResultTemplateOPTICS.html', output)
+
+# Result View Optics - Java
+def ResultViewOPTICSJ(request) :
+    # You fool. Go back to the Uploader View. The ds is not set
+    if request.session.get('ds', None) == None :
+        return HttpResponseRedirect('/')
+
+    # Get element
+    dsId = request.session.get('ds')
+    ds = Dataset.objects.get(id=dsId)
+
+    if request.method == 'GET':
+        # GET - First request prepare the form
+        # Create Form
+        form = ParametersOPTICSJ(initial={'minPoints':15, 'eps':10, 'xi':0.1})
+        # Set default parameters
+        minPoints = 15
+        eps = 10
+        xiV = 0.1
+    else :
+        # POST - New calculation requested
+        form = ParametersOPTICSJ(request.POST)
+
+        if form.is_valid() :
+            minPoints = form.cleaned_data['minPoints']
+            eps = form.cleaned_data['eps']
+            xiV = form.cleaned_data['xi']
+
+            functions = form.cleaned_data['noiseFunctions']
+            generateNoise = form.cleaned_data['generateNoise']
+
+            if (functions != '' and generateNoise) :
+                # Generate noise points
+                noise = Noise(functions)
+                noiseStr = noise.generatePoints()
+                ds.noise = noiseStr
+                ds.save()
+            elif (functions == ''):
+                ds.noise = ''
+                ds.save()
+        else :
+            minPoints = 15
+            eps = 10
+            xiV = 0.1
+
+    filePath = ds.writeFile() # Write dataset on disk
+    optics = OpticsRunner(filePath, eps, minPoints, xi=xiV) # Execution of OPTICS
+    output = optics.run('java')
+    os.remove(filePath) # Delete File
+
+    # Put the form in the output to display it
+    output['form'] = form
+
+    # Get the points from the db to be displayed
+    output['points'] = ds.getPoints()
+
+    deleteOldEntries()
+    return render(request, 'ResultTemplateOPTICS.html', output)
+
 
 # Result View Optics Python
 def ResultViewOPTICSP(request) :
@@ -140,7 +203,9 @@ def ResultViewOPTICSP(request) :
                 ds.noise = ''
                 ds.save()
         else :
-            return HttpResponseRedirect('/resultOPTICSP')
+            minPoints = 10
+            eps = 0.5
+            threshold = 0.75
 
     filePath = ds.writeFile() # Write dataset on disk
     optics = OpticsRunner(filePath, eps, minPoints, thres = threshold) # Execution of OPTICS
@@ -197,7 +262,10 @@ def ResultViewSTSC(request) :
                 ds.noise = ''
                 ds.save()
         else :
-            return HttpResponseRedirect('/resultSTSC')
+            numClusters = 10
+            k = 6
+            simCut = 5
+            stop = 0.001
 
     print "Stop" + str(stop)
     filePath = ds.writeFile() # Write dataset on disk

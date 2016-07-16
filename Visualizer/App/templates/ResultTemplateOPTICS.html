@@ -1,5 +1,12 @@
 <head>
+  {% if form.angle %}
   <title>OPTICS - R Result</title>
+  {% elif form.threshold %}
+  <title>OPTICS - Python Result</title>
+  {% else %}
+  <title>OPTICS - Java Result</title>
+  {% endif %}
+
   {% load staticfiles %}
   <link rel="stylesheet" type="text/css" href="{% static 'runnerOPTICS.css' %}" />
   <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -104,8 +111,10 @@
         <p> Parameters: </p>
         {% if form.angle %}
         <form action="/resultOPTICSR" method="POST">
-        {% else %}
+        {% elif form.threshold %}
         <form action="/resultOPTICSP" method="POST">
+        {% else %}
+        <form action="/resultOPTICSJ" method="POST">
         {% endif %}
           {% csrf_token %}
           {{ form.non_field_errors }}
@@ -116,9 +125,12 @@
           {% if form.angle %}
             {{ form.angle.errors }}
             <div><label id="angle">Angle:  </label>{{ form.angle }}</div>
-          {% else %}
+          {% elif form.threshold %}
             {{ form.threshold.errors }}
             <div><label id="threshold">Threshold:  </label>{{ form.threshold }}</div>
+          {% else %}
+            {{ form.xi.errors }}
+            <div><label id="xi">Xi: </label>{{ form.xi }}</div>
           {% endif %}
           {{ form.noiseFunctions.errors }}
           <div><label id="noise">Noise Functions:  </label>{{ form.noiseFunctions }}</div>
