@@ -45,7 +45,7 @@ WORKDIR $DOCKYARD_SRVPROJ/STSC/cpp
 # Install eigen2
 RUN mv PKGBUILD /tmp
 WORKDIR /tmp
-RUN pacman -S sudo fakeroot pkg-config --noconfirm
+RUN pacman -Sy sudo fakeroot pkg-config --noconfirm
 RUN sudo -u nobody makepkg
 RUN pacman -U eigen2-2.0.17-2-any.pkg.tar.xz --noconfirm
 
