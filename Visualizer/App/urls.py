@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from . import views
 
+# Match the url with the right view
 urlpatterns = [
         url(r'^resultSTSC', views.ResultViewSTSC, name='ResultViewSTSC'),
         url(r'^resultOPTICSR', views.ResultViewOPTICSR, name='ResultViewOPTICSR'),
