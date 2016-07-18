@@ -23,6 +23,7 @@ if use_plot:
     import matplotlib.pyplot as plt
 
 class Optics():
+    # parameters that we can manipulate to get optimal results
     __minpts = 5
     __eps = 0.5
     __thres = 0.75
@@ -66,7 +67,6 @@ class Optics():
                 points_list.append(p_tuple)
 
         X = np.array(points_list)
-        # print X
 
         ## plot scatterplot of points
 
@@ -119,6 +119,8 @@ class Optics():
         colors = cycle('gmkrcbgrcmk')
 
         count = 0
+        # these lists are used get reachability values and points in order of reachability plot
+        # that includes the outliers as well
         clusters_points = []
         cluster_pts = []
         R_points = []
