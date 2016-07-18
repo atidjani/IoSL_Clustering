@@ -186,5 +186,3 @@ class OpticsRunner():
         elif 'java' == name.lower():
             return self.run_optics_java()
 
-# obj = OpticsRunner('./Datasets/2.txt',0.4, 7, 0.75)
-# obj.run('python')
