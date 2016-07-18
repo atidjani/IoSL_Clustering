@@ -60,8 +60,8 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
     # When clusters have largely differing densities, a single cut cannot determine all of the clusters, and secondly,
     # it is often difficult to determine where to cut through the representation so that the extracted clusters are significant
     ##############################  Adjustable parameters ##########################
-    reachability_threshold = 0.02
-    use_reach_thresh = False
+    reachability_threshold = 0.02 # this was used to test for a single cut in the reachability plot
+    use_reach_thresh = False # used for testing the reachability_threshold
 
     # The maximum ratio we allow of average height of clusters on the right and left to the local maxima in question
     # The significance of a separation between regions is determined by the ratio between the height of a
@@ -187,8 +187,6 @@ def clusterTree(node, parentNode, localMaximaPoints, RPlot, RPoints, min_cluster
         #parentNode will be a leaf
         node.assignSplitPoint(-1)
         return
-
-
 
     '''
     Check if nodes can be moved up one level - the new cluster created
