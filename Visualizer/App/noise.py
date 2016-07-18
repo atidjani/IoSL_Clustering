@@ -2,6 +2,7 @@ import parser
 import math
 import numpy as np
 
+# Class that define a noise function
 class Function() :
     __sigma = 0
     __nPoints = 0
@@ -16,6 +17,7 @@ class Function() :
         self.__sigma = sigma
         self.__nPoints = nPoints
 
+    # Generate the noise points based on the parameter of the function
     def generate(self):
         points = []
         for i in range(0, self.__nPoints) :
@@ -26,13 +28,15 @@ class Function() :
 
         return points
 
-
+# Class that handles a set of functions to generate the noise points
 class Noise() :
     __funs = []
 
     def __init__ (self, strFunctions) :
         self.__funs = self.parseFunctions(strFunctions)
 
+    # Parse the text give in input by the user and create the Function objects
+    # No need to check for the format, because this is done by the view.
     def parseFunctions(self, strFunctions) :
         functions = []
         # Functions format (function, x_low_limit, x_bot_limit,sigma, nPoints);(function, x_low_limit, x_bot_limit, sigma, nPoints)
@@ -49,6 +53,7 @@ class Noise() :
 
         return functions
 
+    # Generate all the noise points using all the functions give in input
     def generatePoints(self) :
         points = []
         for fun in self.__funs :
